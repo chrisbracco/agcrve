@@ -78,6 +78,38 @@ body {
   box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -2px 4px rgba(0,0,0,0.06), 0 24px 60px rgba(0,0,0,0.1);
 }
 
+/* Audit App Modal */
+#audit-modal { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; padding: 20px; }
+#audit-modal.active { opacity: 1; pointer-events: auto; }
+.audit-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+.audit-container { position: relative; width: 100%; max-width: 720px; background: var(--white); border-radius: 28px; padding: 48px; box-shadow: 0 32px 80px rgba(0,0,0,0.2); overflow: hidden; transform: translateY(20px); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+#audit-modal.active .audit-container { transform: translateY(0); }
+.audit-close { position: absolute; top: 24px; right: 28px; background: none; border: none; font-size: 1.5rem; color: var(--gray-lt); cursor: pointer; transition: color 0.2s; }
+.audit-close:hover { color: var(--black); }
+.audit-step { display: none; }
+.audit-step.active { display: block; animation: slideUpFade 0.4s ease; }
+@keyframes slideUpFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.audit-progress { display: flex; gap: 4px; margin-bottom: 32px; }
+.audit-progress-bar { height: 4px; flex: 1; background: var(--off-white); border-radius: 4px; }
+.audit-progress-bar.filled { background: var(--black); }
+.audit-header h3 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin-bottom: 12px; }
+.audit-header p { color: var(--gray); font-size: 1.1rem; margin-bottom: 32px; }
+.audit-options { display: flex; flex-direction: column; gap: 12px; }
+.audit-option { width: 100%; text-align: left; padding: 20px 24px; background: var(--off-white); border: 2px solid transparent; border-radius: 16px; font-size: 1.05rem; font-weight: 500; color: var(--black); cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center; }
+.audit-option:hover { background: var(--white); border-color: var(--black); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+.audit-loader { display: none; text-align: center; padding: 60px 0; }
+.audit-loader.active { display: block; }
+.loader-spinner { width: 40px; height: 40px; border: 3px solid var(--off-white); border-top: 3px solid var(--black); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 24px; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.audit-result { display: none; text-align: center; }
+.audit-result.active { display: block; animation: scaleUp 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes scaleUp { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+.result-amount { font-size: clamp(3rem, 6vw, 4.5rem); font-weight: 800; letter-spacing: -0.04em; color: var(--accent-warn); margin: 16px 0 8px; line-height: 1; }
+.audit-form { margin-top: 40px; display: flex; flex-direction: column; gap: 12px; }
+.btn-wa { background: #25D366; color: white; border: none; }
+.btn-wa:hover { background: #128C7E; transform: scale(1.02); box-shadow: 0 8px 24px rgba(37,211,102,0.3); }
+@media (max-width: 600px) { .audit-container { padding: 32px 20px; border-radius: 20px; } }
+
 /* Nav */
 #nav {
   position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
@@ -505,7 +537,7 @@ footer a:hover { color: var(--black); }
     <li><a href="#pilares">Los 4 pilares</a></li>
     <li><a href="#metodo">Cómo trabajamos</a></li>
     <li><a href="#planes">Planes</a></li>
-    <li><a href="#lead" class="nav-pill">Diagnóstico →</a></li>
+    <li><a href="#" onclick="openAuditApp(event)" class="nav-pill">Diagnóstico →</a></li>
   </ul>
 </nav>
 
@@ -525,7 +557,7 @@ footer a:hover { color: var(--black); }
     </p>
 
     <div class="cta-row">
-      <a href="https://tally.so" target="_blank" rel="noopener" class="btn btn-solid">Digital Debt Assessment →</a>
+      <a href="#" onclick="openAuditApp(event)" class="btn btn-solid">Digital Debt Assessment →</a>
       <a href="#pilares" class="btn btn-ghost">Ver Arquitectura</a>
     </div>
 
@@ -919,7 +951,7 @@ footer a:hover { color: var(--black); }
     <p class="lead" style="max-width: 680px;">Someteremos la actualidad de su negocio al "Digital Debt Assessment". Es una instancia constructiva diseñada para encontrar las brechas o "fugas" de su engranaje donde implementar mejoras drásticas será sumamente rentable.</p>
 
     <div class="cta-row" style="margin-top: 8px;">
-      <a href="https://tally.so" target="_blank" rel="noopener" class="btn btn-solid" style="font-size: 1rem; padding: 16px 32px;">Iniciar Auditoría Gratuita →</a>
+      <a href="#" onclick="openAuditApp(event)" class="btn btn-solid" style="font-size: 1rem; padding: 16px 32px;">Iniciar Auditoría Gratuita →</a>
     </div>
 
     <div class="cta-steps">
@@ -942,6 +974,80 @@ footer a:hover { color: var(--black); }
   </div>
 </section>
 
+<!-- AUDIT APP MODAL -->
+<div id="audit-modal">
+  <div class="audit-overlay" onclick="closeAuditApp()"></div>
+  <div class="audit-container">
+    <button class="audit-close" onclick="closeAuditApp()">×</button>
+    
+    <!-- Step 1 -->
+    <div class="audit-step step-1 active">
+      <div class="audit-progress"><div class="audit-progress-bar filled"></div><div class="audit-progress-bar"></div><div class="audit-progress-bar"></div></div>
+      <div class="audit-header">
+        <p class="eyebrow">Digital Debt Assessment</p>
+        <h3>¿Cuántos empleados operativos conforman su equipo?</h3>
+        <p>Seleccione el rango de personal que interactúa diariamente con la información y procesos del negocio.</p>
+      </div>
+      <div class="audit-options">
+        <button class="audit-option" onclick="nextAudit(1, 15)">Menos de 10 empleados <span>→</span></button>
+        <button class="audit-option" onclick="nextAudit(1, 35)">Entre 11 y 50 empleados <span>→</span></button>
+        <button class="audit-option" onclick="nextAudit(1, 80)">Más de 50 empleados <span>→</span></button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="audit-step step-2">
+      <div class="audit-progress"><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div><div class="audit-progress-bar"></div></div>
+      <div class="audit-header">
+        <p class="eyebrow">Diagnóstico de Flujo</p>
+        <h3>¿Cuántas horas a la semana estima que su equipo pierde consolidando datos?</h3>
+        <p>Tiempo gastado en armar reportes manuales, buscar facturas, o cruzar excels entre diferentes departamentos.</p>
+      </div>
+      <div class="audit-options">
+        <button class="audit-option" onclick="nextAudit(2, 5)">Menos de 5 horas/semana <span>→</span></button>
+        <button class="audit-option" onclick="nextAudit(2, 15)">Entre 10 y 20 horas/semana <span>→</span></button>
+        <button class="audit-option" onclick="nextAudit(2, 35)">Más de 30 horas/semana <span>→</span></button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="audit-step step-3">
+      <div class="audit-progress"><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div></div>
+      <div class="audit-header">
+        <p class="eyebrow">Infraestructura</p>
+        <h3>¿Cómo describiría el estado tecnológico de sus operaciones hoy?</h3>
+        <p>La madurez de sus herramientas dicta la gravedad o aceleración de su deuda digital.</p>
+      </div>
+      <div class="audit-options">
+        <button class="audit-option" onclick="finishAudit(1.2)">Sistemas instalados pero desconectados entre sí <span>→</span></button>
+        <button class="audit-option" onclick="finishAudit(1.5)">Tenemos un ERP rígido complementado con Excels <span>→</span></button>
+        <button class="audit-option" onclick="finishAudit(2.0)">Operamos un 80% comunicándonos por Excel/WhatsApp <span>→</span></button>
+      </div>
+    </div>
+
+    <!-- Loader -->
+    <div class="audit-loader">
+      <div class="loader-spinner"></div>
+      <h3>Corriendo algoritmo de evaluación...</h3>
+      <p class="mono" style="color: var(--gray-lt); margin-top: 10px;">Calculando pérdida operativa (Overhead) estimada.</p>
+    </div>
+
+    <!-- Result -->
+    <div class="audit-result">
+      <p class="mono" style="color: var(--gray-lt); letter-spacing: 0.1em; text-transform: uppercase;">Diagnóstico CrGen</p>
+      <h3 style="font-size: 1.5rem; margin-top: 12px; color: var(--black);">Su Deuda Digital estimada le cuesta al negocio:</h3>
+      <div class="result-amount" id="audit-amount">$0</div>
+      <p style="color: var(--gray); font-size: 1.05rem;">Al mes en nómina desperdiciada, tiempo directivo e ineficiencias causadas por silos.</p>
+      
+      <div class="audit-form">
+        <button onclick="sendAuditWhatsApp()" class="btn btn-solid btn-wa" style="width: 100%; justify-content: center; padding: 18px;">Solicitar Plan de Solución por WhatsApp →</button>
+        <p style="margin: 12px 0; font-size: 0.9rem; color: var(--gray-lt);">Este reporte inicial se adjuntará directamente al mensaje de WhatsApp para que nuestros Principals puedan evaluarlo sin intermediarios.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <footer>
   <span>© 2026 CrGen · Architecture as a Service</span>
   <div class="footer-links">
@@ -958,6 +1064,61 @@ footer a:hover { color: var(--black); }
 </div>
 
 <script>
+// Audit App Logic
+let auditData = { size: 0, hours: 0, multiplier: 1, totalLost: 0 };
+const auditModal = document.getElementById('audit-modal');
+
+function openAuditApp(e) {
+  if(e) e.preventDefault();
+  auditModal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  resetAudit();
+}
+
+function closeAuditApp() {
+  auditModal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function resetAudit() {
+  document.querySelectorAll('.audit-step, .audit-loader, .audit-result').forEach(el => el.classList.remove('active'));
+  document.querySelector('.step-1').classList.add('active');
+  auditData = { size: 0, hours: 0, multiplier: 1, totalLost: 0 };
+}
+
+function nextAudit(currentStep, value) {
+  if(currentStep === 1) auditData.size = value;
+  if(currentStep === 2) auditData.hours = value;
+  
+  document.querySelector('.step-' + currentStep).classList.remove('active');
+  document.querySelector('.step-' + (currentStep + 1)).classList.add('active');
+}
+
+function finishAudit(multiplier) {
+  auditData.multiplier = multiplier;
+  
+  // Calculate realistic monthly loss
+  // (Hours week * 4 weeks * avg hourly rate $25) * complexity multiplier
+  auditData.totalLost = Math.floor((auditData.hours * 4 * 25) * auditData.multiplier);
+  
+  // Base cost baseline to ensure impact
+  if(auditData.totalLost < 1200) auditData.totalLost = 1800 + Math.floor(Math.random()*500);
+
+  document.querySelector('.step-3').classList.remove('active');
+  document.querySelector('.audit-loader').classList.add('active');
+  
+  setTimeout(() => {
+    document.querySelector('.audit-loader').classList.remove('active');
+    document.getElementById('audit-amount').textContent = '$' + auditData.totalLost.toLocaleString('en-US');
+    document.querySelector('.audit-result').classList.add('active');
+  }, 1800);
+}
+
+function sendAuditWhatsApp() {
+  const text = `Hola CrGen. He completado el Digital Debt Assessment en la página.%0A%0A*Mi Deuda Operativa Estimada:* $${auditData.totalLost.toLocaleString('en-US')} USD/mes.%0A%0AQuiero agendar la Auditoría para estructurar mis flujos de información y detener esta fuga.`;
+  window.open(`https://wa.me/584122984632?text=${text}`, '_blank');
+}
+
 // Scroll reveal
 const io = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
