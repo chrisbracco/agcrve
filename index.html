@@ -557,7 +557,7 @@ footer a:hover { color: var(--black); }
     </p>
 
     <div class="cta-row">
-      <a href="#" onclick="openAuditApp(event)" class="btn btn-solid">Digital Debt Assessment →</a>
+      <a href="#" onclick="openAuditApp(event)" class="btn btn-solid">Auditar mi operación →</a>
       <a href="#pilares" class="btn btn-ghost">Ver Arquitectura</a>
     </div>
 
@@ -948,7 +948,7 @@ footer a:hover { color: var(--black); }
   <div class="cta-panel crystal-3">
     <p class="eyebrow">Tome el Control</p>
     <h2>Descubra dónde está perdiendo<br>dinero operativo hoy.</h2>
-    <p class="lead" style="max-width: 680px;">Someteremos la actualidad de su negocio al "Digital Debt Assessment". Es una instancia constructiva diseñada para encontrar las brechas o "fugas" de su engranaje donde implementar mejoras drásticas será sumamente rentable.</p>
+    <p class="lead" style="max-width: 680px;">Someteremos la actualidad de su negocio a una Auditoría de Procesos. Es una instancia constructiva diseñada para encontrar las brechas o "fugas" de su engranaje donde recuperar tiempo será sumamente rentable.</p>
 
     <div class="cta-row" style="margin-top: 8px;">
       <a href="#" onclick="openAuditApp(event)" class="btn btn-solid" style="font-size: 1rem; padding: 16px 32px;">Iniciar Auditoría Gratuita →</a>
@@ -982,66 +982,107 @@ footer a:hover { color: var(--black); }
     
     <!-- Step 1 -->
     <div class="audit-step step-1 active">
-      <div class="audit-progress"><div class="audit-progress-bar filled"></div><div class="audit-progress-bar"></div><div class="audit-progress-bar"></div></div>
+      <div class="audit-progress"><div class="audit-progress-bar filled"></div><div class="audit-progress-bar"></div><div class="audit-progress-bar"></div><div class="audit-progress-bar"></div><div class="audit-progress-bar"></div></div>
       <div class="audit-header">
-        <p class="eyebrow">Digital Debt Assessment</p>
-        <h3>¿Cuántos empleados operativos conforman su equipo?</h3>
-        <p>Seleccione el rango de personal que interactúa diariamente con la información y procesos del negocio.</p>
+        <p class="eyebrow">Auditoría Operativa</p>
+        <h3>¿A qué industria o sector pertenece su negocio?</h3>
+        <p>La complejidad logística y documental varía según el mercado.</p>
       </div>
-      <div class="audit-options">
-        <button class="audit-option" onclick="nextAudit(1, 15)">Menos de 10 empleados <span>→</span></button>
-        <button class="audit-option" onclick="nextAudit(1, 35)">Entre 11 y 50 empleados <span>→</span></button>
-        <button class="audit-option" onclick="nextAudit(1, 80)">Más de 50 empleados <span>→</span></button>
+      <div class="audit-form" style="margin-top: 0; margin-bottom: 24px;">
+        <input type="text" id="audit-sector" placeholder="Ej: Construcción, RRHH, Logística, Retail..." />
+        <button class="audit-option" style="justify-content: center; background: var(--black); color: white;" onclick="nextAuditInput(1, 'audit-sector', 'sector')">Continuar →</button>
       </div>
     </div>
 
     <!-- Step 2 -->
     <div class="audit-step step-2">
-      <div class="audit-progress"><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div><div class="audit-progress-bar"></div></div>
+      <div class="audit-progress"><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div><div class="audit-progress-bar"></div><div class="audit-progress-bar"></div><div class="audit-progress-bar"></div></div>
       <div class="audit-header">
-        <p class="eyebrow">Diagnóstico de Flujo</p>
-        <h3>¿Cuántas horas a la semana estima que su equipo pierde consolidando datos?</h3>
-        <p>Tiempo gastado en armar reportes manuales, buscar facturas, o cruzar excels entre diferentes departamentos.</p>
+        <p class="eyebrow">Herramientas Actuales</p>
+        <h3>¿Cuál es el software o ERP principal donde reside su data hoy?</h3>
+        <p>El núcleo operativo actual dictará la vía de conexión o saneamiento.</p>
       </div>
-      <div class="audit-options">
-        <button class="audit-option" onclick="nextAudit(2, 5)">Menos de 5 horas/semana <span>→</span></button>
-        <button class="audit-option" onclick="nextAudit(2, 15)">Entre 10 y 20 horas/semana <span>→</span></button>
-        <button class="audit-option" onclick="nextAudit(2, 35)">Más de 30 horas/semana <span>→</span></button>
+      <div class="audit-form" style="margin-top: 0; margin-bottom: 24px;">
+        <input type="text" id="audit-tool" placeholder="Ej: SAP, Odoo, QuickBooks, Múltiples Excels..." />
+        <button class="audit-option" style="justify-content: center; background: var(--black); color: white;" onclick="nextAuditInput(2, 'audit-tool', 'tool')">Continuar →</button>
       </div>
     </div>
 
     <!-- Step 3 -->
     <div class="audit-step step-3">
-      <div class="audit-progress"><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div></div>
+      <div class="audit-progress"><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div><div class="audit-progress-bar"></div><div class="audit-progress-bar"></div></div>
       <div class="audit-header">
-        <p class="eyebrow">Infraestructura</p>
-        <h3>¿Cómo describiría el estado tecnológico de sus operaciones hoy?</h3>
-        <p>La madurez de sus herramientas dicta la gravedad o aceleración de su deuda digital.</p>
+        <p class="eyebrow">Volumen</p>
+        <h3>¿Cuántos empleados interactúan con la información diariamente?</h3>
+        <p>Seleccione el rango de personal que construye correos, reportes y métricas.</p>
       </div>
       <div class="audit-options">
-        <button class="audit-option" onclick="finishAudit(1.2)">Sistemas instalados pero desconectados entre sí <span>→</span></button>
-        <button class="audit-option" onclick="finishAudit(1.5)">Tenemos un ERP rígido complementado con Excels <span>→</span></button>
-        <button class="audit-option" onclick="finishAudit(2.0)">Operamos un 80% comunicándonos por Excel/WhatsApp <span>→</span></button>
+        <button class="audit-option" onclick="nextAuditBtn(3, '1 a 10', 'size')">Grupos reducidos (Menos de 10) <span>→</span></button>
+        <button class="audit-option" onclick="nextAuditBtn(3, '11 a 50', 'size')">Equipos Medios (Entre 11 y 50) <span>→</span></button>
+        <button class="audit-option" onclick="nextAuditBtn(3, 'Más de 50', 'size')">Gran Volumen (Más de 50) <span>→</span></button>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="audit-step step-4">
+      <div class="audit-progress"><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div><div class="audit-progress-bar"></div></div>
+      <div class="audit-header">
+        <p class="eyebrow">Tiempo Muerto</p>
+        <h3>¿Cuántas horas a la semana diría que su equipo gasta consolidando datos?</h3>
+        <p>Tiempo perdido en copiar, pegar y cruzar reportes.</p>
+      </div>
+      <div class="audit-options">
+        <button class="audit-option" onclick="nextAuditBtn(4, 10, 'hours')">Cerca de 10 horas/semana <span>→</span></button>
+        <button class="audit-option" onclick="nextAuditBtn(4, 30, 'hours')">Entre 20 y 30 horas/semana <span>→</span></button>
+        <button class="audit-option" onclick="nextAuditBtn(4, 60, 'hours')">Excesivo: Más de 50 horas/semana <span>→</span></button>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="audit-step step-5">
+      <div class="audit-progress"><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div><div class="audit-progress-bar filled"></div></div>
+      <div class="audit-header">
+        <p class="eyebrow">Infraestructura</p>
+        <h3>¿En qué estado se encuentran sus sistemas operativos hoy?</h3>
+        <p>La madurez dicta la gravedad de la fragmentación que sufre hoy.</p>
+      </div>
+      <div class="audit-options">
+        <button class="audit-option" onclick="finishAudit('Sistemas desconectados')">Tenemos sistemas pero no interactúan solos <span>→</span></button>
+        <button class="audit-option" onclick="finishAudit('Demasiadas hojas Excel')">Nuestra operación es un 80% correos y Excel <span>→</span></button>
+        <button class="audit-option" onclick="finishAudit('ERP muy rígido')">Un ERP sumamente complejo o desactualizado <span>→</span></button>
       </div>
     </div>
 
     <!-- Loader -->
     <div class="audit-loader">
       <div class="loader-spinner"></div>
-      <h3>Corriendo algoritmo de evaluación...</h3>
-      <p class="mono" style="color: var(--gray-lt); margin-top: 10px;">Calculando pérdida operativa (Overhead) estimada.</p>
+      <h3>Corriendo mapeo operativo...</h3>
+      <p class="mono" style="color: var(--gray-lt); margin-top: 10px;">Identificando cuellos de botella y fugas de tiempo.</p>
     </div>
 
     <!-- Result -->
     <div class="audit-result">
-      <p class="mono" style="color: var(--gray-lt); letter-spacing: 0.1em; text-transform: uppercase;">Diagnóstico CrGen</p>
-      <h3 style="font-size: 1.5rem; margin-top: 12px; color: var(--black);">Su Deuda Digital estimada le cuesta al negocio:</h3>
-      <div class="result-amount" id="audit-amount">$0</div>
-      <p style="color: var(--gray); font-size: 1.05rem;">Al mes en nómina desperdiciada, tiempo directivo e ineficiencias causadas por silos.</p>
+      <p class="mono" style="color: var(--gray-lt); letter-spacing: 0.1em; text-transform: uppercase;">Diagnóstico Preliminar</p>
+      <h3 style="font-size: 1.8rem; margin-top: 12px; color: var(--black);">El costo de operar sin arquitectura de procesos.</h3>
+      
+      <div style="display: flex; gap: 12px; margin: 24px 0; text-align: left; flex-wrap: wrap;">
+        <div style="flex:1; min-width: 200px; background: var(--off-white); padding: 20px; border-radius: 16px; border: 1px solid #fce8e6;">
+          <p style="font-size: 0.75rem; color: var(--accent-warn); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 6px;">SIN SISTEMA NATIVO</p>
+          <div style="font-size: 1.4rem; font-weight: 800; color: var(--black);" class="mono"><span id="res-hours">45</span>h / semanales</div>
+          <p style="font-size: 0.85rem; color: var(--gray); margin-top: 4px;">Gastadas en cruce manual y reportes fragmentados.</p>
+        </div>
+        <div style="flex:1; min-width: 200px; background: #1d1d1f; padding: 20px; border-radius: 16px;">
+          <p style="font-size: 0.75rem; color: var(--gray-lt); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 6px;">CON ARQUITECTURA</p>
+          <div style="font-size: 1.4rem; font-weight: 800; color: white;" class="mono">Instantáneo</div>
+          <p style="font-size: 0.85rem; color: var(--gray-lt); margin-top: 4px;">Lectura en tablero gerencial sin intervención humana.</p>
+        </div>
+      </div>
+
+      <p style="color: var(--gray); font-size: 1.05rem; margin-bottom: 8px;">Su dependencia de flujos manuales con <b><span id="res-tool">su herramienta actual</span></b> está ahogando el ritmo operativo directivo y retrasando su capacidad de reacción real.</p>
       
       <div class="audit-form">
-        <button onclick="sendAuditWhatsApp()" class="btn btn-solid btn-wa" style="width: 100%; justify-content: center; padding: 18px;">Solicitar Plan de Solución por WhatsApp →</button>
-        <p style="margin: 12px 0; font-size: 0.9rem; color: var(--gray-lt);">Este reporte inicial se adjuntará directamente al mensaje de WhatsApp para que nuestros Principals puedan evaluarlo sin intermediarios.</p>
+        <button onclick="sendAuditWhatsApp()" class="btn btn-solid btn-wa" style="width: 100%; justify-content: center; padding: 18px;">Agendar Intervención Operativa por WhatsApp →</button>
+        <p style="margin: 12px 0; font-size: 0.9rem; color: var(--gray-lt);">Este diagnóstico preliminar será evaluado directamente por nuestro nivel directivo para plantearle una ruta de escape viable.</p>
       </div>
     </div>
 
@@ -1065,7 +1106,7 @@ footer a:hover { color: var(--black); }
 
 <script>
 // Audit App Logic
-let auditData = { size: 0, hours: 0, multiplier: 1, totalLost: 0 };
+let auditData = { sector: '', tool: '', size: '', hours: 0, status: '' };
 const auditModal = document.getElementById('audit-modal');
 
 function openAuditApp(e) {
@@ -1083,39 +1124,47 @@ function closeAuditApp() {
 function resetAudit() {
   document.querySelectorAll('.audit-step, .audit-loader, .audit-result').forEach(el => el.classList.remove('active'));
   document.querySelector('.step-1').classList.add('active');
-  auditData = { size: 0, hours: 0, multiplier: 1, totalLost: 0 };
+  document.getElementById('audit-sector').value = '';
+  document.getElementById('audit-tool').value = '';
+  auditData = { sector: '', tool: '', size: '', hours: 0, status: '' };
 }
 
-function nextAudit(currentStep, value) {
-  if(currentStep === 1) auditData.size = value;
-  if(currentStep === 2) auditData.hours = value;
-  
+function nextAuditInput(currentStep, inputId, key) {
+  const val = document.getElementById(inputId).value.trim() || 'No especificado';
+  auditData[key] = val;
+  advanceStep(currentStep);
+}
+
+function nextAuditBtn(currentStep, value, key) {
+  auditData[key] = value;
+  advanceStep(currentStep);
+}
+
+function advanceStep(currentStep) {
   document.querySelector('.step-' + currentStep).classList.remove('active');
   document.querySelector('.step-' + (currentStep + 1)).classList.add('active');
 }
 
-function finishAudit(multiplier) {
-  auditData.multiplier = multiplier;
+function finishAudit(status) {
+  auditData.status = status;
   
-  // Calculate realistic monthly loss
-  // (Hours week * 4 weeks * avg hourly rate $25) * complexity multiplier
-  auditData.totalLost = Math.floor((auditData.hours * 4 * 25) * auditData.multiplier);
-  
-  // Base cost baseline to ensure impact
-  if(auditData.totalLost < 1200) auditData.totalLost = 1800 + Math.floor(Math.random()*500);
+  // Set summary UI data
+  let displayHours = auditData.hours;
+  if(displayHours === 0) displayHours = 35; // fallback
+  document.getElementById('res-hours').textContent = displayHours;
+  document.getElementById('res-tool').textContent = auditData.tool !== 'No especificado' ? auditData.tool : "herramientas fragmentadas";
 
-  document.querySelector('.step-3').classList.remove('active');
+  document.querySelector('.step-5').classList.remove('active');
   document.querySelector('.audit-loader').classList.add('active');
   
   setTimeout(() => {
     document.querySelector('.audit-loader').classList.remove('active');
-    document.getElementById('audit-amount').textContent = '$' + auditData.totalLost.toLocaleString('en-US');
     document.querySelector('.audit-result').classList.add('active');
   }, 1800);
 }
 
 function sendAuditWhatsApp() {
-  const text = `Hola CrGen. He completado el Digital Debt Assessment en la página.%0A%0A*Mi Deuda Operativa Estimada:* $${auditData.totalLost.toLocaleString('en-US')} USD/mes.%0A%0AQuiero agendar la Auditoría para estructurar mis flujos de información y detener esta fuga.`;
+  const text = `Hola CrGen. Solos del sector *${auditData.sector}*. He completado la Auditoría Operativa.%0A%0A*Empleados:* ${auditData.size}%0A*Herramienta:* ${auditData.tool}%0A*Pérdida Semanal:* ~${auditData.hours}h consolidando datos.%0A*Estado:* ${auditData.status}%0A%0ADeseo conversar sobre cómo unificar este flujo de información.`;
   window.open(`https://wa.me/584122984632?text=${text}`, '_blank');
 }
 
