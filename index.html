@@ -115,6 +115,27 @@ body {
 .btn-wa:hover { background: #128C7E; transform: scale(1.02); box-shadow: 0 8px 24px rgba(37,211,102,0.3); }
 @media (max-width: 600px) { #audit-modal { padding: 20px 16px; align-items: flex-start; } .audit-container { padding: 32px 20px; border-radius: 20px; margin: 0 auto; } }
 
+/* Integrations Marquee */
+.logo-marquee {
+  overflow: hidden; white-space: nowrap; padding: 40px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  background: var(--off-white); position: relative;
+}
+.logo-marquee::before, .logo-marquee::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 100px; z-index: 2; pointer-events: none;
+}
+.logo-marquee::before { left: 0; background: linear-gradient(to right, var(--off-white), transparent); }
+.logo-marquee::after { right: 0; background: linear-gradient(to left, var(--off-white), transparent); }
+
+.marquee-track {
+  display: inline-flex; gap: 60px;
+  animation: scrollMarquee 25s linear infinite;
+  align-items: center;
+}
+.marquee-track img { height: 40px; opacity: 0.8; filter: grayscale(100%); transition: filter 0.3s, opacity 0.3s; }
+.marquee-track svg { filter: grayscale(100%); transition: filter 0.3s; }
+.marquee-track img:hover, .marquee-track h3:hover svg { filter: grayscale(0%); opacity: 1; }
+@keyframes scrollMarquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
 /* Nav */
 #nav {
   position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
@@ -542,7 +563,7 @@ footer a:hover { color: var(--black); }
     <li><a href="#pilares">Los 4 pilares</a></li>
     <li><a href="#metodo">Cómo trabajamos</a></li>
     <li><a href="#planes">Planes</a></li>
-    <li><a href="#" onclick="openAuditApp(event)" class="nav-pill">Diagnóstico →</a></li>
+    <li><a href="#lead" class="nav-pill">Diagnóstico →</a></li>
   </ul>
 </nav>
 
@@ -562,7 +583,7 @@ footer a:hover { color: var(--black); }
     </p>
 
     <div class="cta-row">
-      <a href="#" onclick="openAuditApp(event)" class="btn btn-solid">Auditar mi operación →</a>
+      <a href="#senales" class="btn btn-solid">Auditar mi operación →</a>
       <a href="#pilares" class="btn btn-ghost">Ver Arquitectura</a>
     </div>
 
@@ -573,6 +594,93 @@ footer a:hover { color: var(--black); }
         <span>Descubra si tiene "Deuda Digital" severa recorriendo estos síntomas.</span>
       </div>
       <a href="#senales" class="btn btn-solid">Auditar operación →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ECOSISTEMA UNIFICADO -->
+<section style="margin-top: 50px; margin-bottom: 50px; text-align: center;">
+  <p class="eyebrow" style="margin-bottom: 12px;">Ecosistemas Integrados</p>
+  <p style="font-size: 1.05rem; color: var(--gray); max-width: 600px; margin: 0 auto 32px;">Extraemos y saneamos su lógica operativa sin importar en cuál de estas plataformas vive su data hoy.</p>
+  <style>
+    .app-brand {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 1.25rem;
+      color: #7f8c8d;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 35px;
+      white-space: nowrap;
+    }
+    .app-brand img, .marquee-track svg.app-icon {
+      height: 32px !important;
+      width: auto !important;
+      margin: 0 !important;
+      opacity: 0.8;
+      filter: grayscale(100%);
+    }
+    .brand-norkut { font-family: 'Century Gothic', -apple-system, sans-serif; font-weight: 400; letter-spacing: -0.05em; margin-bottom: -4px;}
+  </style>
+  <div class="logo-marquee">
+    <div class="marquee-track">
+      <!-- Grupo 1 -->
+      <h3 class="app-brand"><img src="assets/logos/sap.svg" alt="SAP"> SAP</h3>
+      <h3 class="app-brand"><img src="assets/logos/salesforce.svg" alt="Salesforce"> Salesforce</h3>
+      <h3 class="app-brand"><img src="assets/logos/odoo.svg" alt="Odoo"> Odoo</h3>
+      <h3 class="app-brand"><img src="assets/logos/zoho.svg" alt="Zoho"> Zoho</h3>
+      <h3 class="app-brand"><img src="assets/logos/hubspot.svg" alt="HubSpot"> HubSpot</h3>
+      <h3 class="app-brand"><img src="assets/logos/trello.svg" alt="Trello"> Trello</h3>
+      <h3 class="app-brand"><img src="assets/logos/slack.svg" alt="Slack"> Slack</h3>
+      <h3 class="app-brand"><img src="assets/logos/notion.svg" alt="Notion"> Notion</h3>
+      
+      <!-- Google Apps -->
+      <h3 class="app-brand"><img src="assets/logos/googledrive.svg" alt="Google Drive"> Drive</h3>
+      <h3 class="app-brand"><img src="assets/logos/gmail.svg" alt="Gmail"> Gmail</h3>
+      <h3 class="app-brand"><img src="assets/logos/googlecalendar.svg" alt="Google Calendar"> Calendar</h3>
+      <h3 class="app-brand"><img src="assets/logos/googledocs.svg" alt="Docs"> Docs</h3>
+
+      <!-- Microsoft Apps -->
+      <h3 class="app-brand"><img src="assets/logos/microsoft.svg" alt="Excel"> Excel</h3>
+      <h3 class="app-brand"><img src="assets/logos/microsoft.svg" alt="Word"> Word</h3>
+      <h3 class="app-brand"><img src="assets/logos/teams.svg" alt="Teams"> Teams</h3>
+      <h3 class="app-brand"><img src="assets/logos/microsoft.svg" alt="SharePoint"> SharePoint</h3>
+      
+      <!-- Nacionales -->
+      <h3 class="app-brand brand-norkut"><img src="assets/logos/norkut.svg" alt="Norkut"> norkut</h3>
+      <h3 class="app-brand"><svg class="app-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> A2 Softway</h3>
+      <h3 class="app-brand"><svg class="app-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Profit Plus</h3>
+      <h3 class="app-brand"><svg class="app-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> SAINT</h3>
+
+      <!-- Loop Infinito - Grupo 2 -->
+      <h3 class="app-brand"><img src="assets/logos/sap.svg" alt="SAP"> SAP</h3>
+      <h3 class="app-brand"><img src="assets/logos/salesforce.svg" alt="Salesforce"> Salesforce</h3>
+      <h3 class="app-brand"><img src="assets/logos/odoo.svg" alt="Odoo"> Odoo</h3>
+      <h3 class="app-brand"><img src="assets/logos/zoho.svg" alt="Zoho"> Zoho</h3>
+      <h3 class="app-brand"><img src="assets/logos/hubspot.svg" alt="HubSpot"> HubSpot</h3>
+      <h3 class="app-brand"><img src="assets/logos/trello.svg" alt="Trello"> Trello</h3>
+      <h3 class="app-brand"><img src="assets/logos/slack.svg" alt="Slack"> Slack</h3>
+      <h3 class="app-brand"><img src="assets/logos/notion.svg" alt="Notion"> Notion</h3>
+      
+      <!-- Google Apps -->
+      <h3 class="app-brand"><img src="assets/logos/googledrive.svg" alt="Google Drive"> Drive</h3>
+      <h3 class="app-brand"><img src="assets/logos/gmail.svg" alt="Gmail"> Gmail</h3>
+      <h3 class="app-brand"><img src="assets/logos/googlecalendar.svg" alt="Google Calendar"> Calendar</h3>
+      <h3 class="app-brand"><img src="assets/logos/googledocs.svg" alt="Docs"> Docs</h3>
+
+      <!-- Microsoft Apps -->
+      <h3 class="app-brand"><img src="assets/logos/microsoft.svg" alt="Excel"> Excel</h3>
+      <h3 class="app-brand"><img src="assets/logos/microsoft.svg" alt="Word"> Word</h3>
+      <h3 class="app-brand"><img src="assets/logos/teams.svg" alt="Teams"> Teams</h3>
+      <h3 class="app-brand"><img src="assets/logos/microsoft.svg" alt="SharePoint"> SharePoint</h3>
+      
+      <!-- Nacionales -->
+      <h3 class="app-brand brand-norkut"><img src="assets/logos/norkut.svg" alt="Norkut"> norkut</h3>
+      <h3 class="app-brand"><svg class="app-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> A2 Softway</h3>
+      <h3 class="app-brand"><svg class="app-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Profit Plus</h3>
+      <h3 class="app-brand"><svg class="app-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> SAINT</h3>
     </div>
   </div>
 </section>
@@ -639,9 +747,11 @@ footer a:hover { color: var(--black); }
       <strong id="sym-count-label" style="font-size: 1.1rem; font-weight: 800; letter-spacing: -0.025em; color: var(--black);">Marque las señales que le suceden</strong>
       <div id="sym-verdict" style="font-size: 0.88rem; color: var(--gray); margin-top: 4px;">Al marcar 3 o más, tiene sentido que hablemos.</div>
     </div>
-    <a href="#lead" class="btn btn-solid" id="sym-cta" style="opacity: 0.4; pointer-events: none;">Agendar diagnóstico →</a>
+    <a href="#" onclick="openAuditApp(event)" class="btn btn-solid" id="sym-cta" style="opacity: 0.4; pointer-events: none;">Agendar diagnóstico →</a>
   </div>
 </section>
+
+
 
 <!-- 4 PILLARS (solución) -->
 <section id="pilares" class="section-wrap">
@@ -1007,8 +1117,9 @@ footer a:hover { color: var(--black); }
         <h3>¿A cuánto estima que ascienden sus costos operativos mensuales?</h3>
         <p>Entender la escala monetaria nos ayuda a dimensionar la urgencia y el tamaño de la fuga de capital.</p>
       </div>
-      <div class="audit-form">
-        <input type="text" id="audit-cost" placeholder="Ej: 15.000 USD, 50k..." autocomplete="off" />
+      <div class="audit-form" style="position: relative;">
+        <span style="position: absolute; left: 0; bottom: 25px; font-size: 2.2rem; font-weight: 700; color: var(--gray-xlt);">$</span>
+        <input type="text" id="audit-cost" placeholder="15.000" autocomplete="off" style="padding-left: 38px;" />
         <button class="btn-next-audit" onclick="nextAuditInput(2, 'audit-cost', 'cost')">Siguiente paso <span>→</span></button>
       </div>
     </div>
@@ -1049,8 +1160,9 @@ footer a:hover { color: var(--black); }
         <h3>¿Cuántas horas a la semana suma todo su equipo consolidando datos a mano?</h3>
         <p>El diagnóstico calculará su pérdida de tiempo basándose en este número.</p>
       </div>
-      <div class="audit-form">
-        <input type="number" id="audit-hours" placeholder="Ej: 45" autocomplete="off" />
+      <div class="audit-form" style="position: relative;">
+        <input type="number" id="audit-hours" placeholder="45" autocomplete="off" />
+        <span id="audit-hours-suffix" style="position: absolute; left: 60px; bottom: 27px; font-size: 1.2rem; font-weight: 700; color: var(--gray-lt); pointer-events: none; opacity: 0; transition: opacity 0.2s;">hrs / sem</span>
         <button class="btn-next-audit" style="background: var(--accent-warn);" onclick="finishAuditFinal()">Ver Diagnóstico Preliminar <span>→</span></button>
       </div>
     </div>
@@ -1083,7 +1195,29 @@ footer a:hover { color: var(--black); }
           </div>
         </div>
         
-        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--gray-xlt);">
+        <div style="margin-top: 16px; padding-top: 24px; border-top: 1px solid var(--gray-xlt);">
+          <div style="margin-bottom: 24px;">
+            <p style="font-size: 0.75rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; font-weight: 700;">Gráfico de Fuga Operativa</p>
+            
+            <div style="margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 0.65rem; color: var(--black); font-weight: 800; letter-spacing: 0.05em;">ESTADO ACTUAL (Ineficiente)</span>
+              </div>
+              <div style="background: #e5e5ea; border-radius: 999px; height: 12px; width: 100%;">
+                <div id="bar-manual" style="background: var(--accent-warn); width: 0%; height: 100%; border-radius: 999px; transition: width 1.5s cubic-bezier(0.34,1.56,0.64,1); box-shadow: inset -2px 0 6px rgba(0,0,0,0.1);"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 0.65rem; color: #34C759; font-weight: 800; letter-spacing: 0.05em;">CON CrGen (Latencia Cero)</span>
+              </div>
+              <div style="background: #e5e5ea; border-radius: 999px; height: 12px; width: 100%;">
+                <div id="bar-crgen" style="background: #34C759; width: 0%; height: 100%; border-radius: 999px; transition: width 1.5s cubic-bezier(0.34,1.56,0.64,1) 0.5s; box-shadow: inset -2px 0 6px rgba(0,0,0,0.1);"></div>
+              </div>
+            </div>
+          </div>
+          
           <p style="font-size: 0.75rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; font-weight: 700;">Proyección con Infraestructura CrGen</p>
           <div style="display: flex; gap: 12px; align-items: center; background: #1d1d1f; padding: 16px; border-radius: 12px;">
             <div style="width: 12px; height: 12px; background: #34C759; border-radius: 50%; flex-shrink: 0;"></div>
@@ -1187,11 +1321,39 @@ function finishAuditFinal() {
   document.querySelector('.step-5').classList.remove('active');
   document.querySelector('.audit-loader').classList.add('active');
   
+  // reset bars
+  document.getElementById('bar-manual').style.width = '0%';
+  document.getElementById('bar-crgen').style.width = '0%';
+
   setTimeout(() => {
     document.querySelector('.audit-loader').classList.remove('active');
     document.querySelector('.audit-result').classList.add('active');
+    
+    // Animate bars
+    setTimeout(() => {
+      document.getElementById('bar-manual').style.width = '85%';
+      document.getElementById('bar-crgen').style.width = '8%';
+    }, 100);
+
   }, 1800);
 }
+
+// Input Formatters
+document.getElementById('audit-cost').addEventListener('input', function(e) {
+  let val = this.value.replace(/\D/g, ''); 
+  if(val !== '') this.value = new Intl.NumberFormat('es-VE').format(val);
+});
+document.getElementById('audit-hours').addEventListener('input', function(e) {
+  let val = this.value;
+  let sfx = document.getElementById('audit-hours-suffix');
+  if(val.length > 0) {
+    sfx.style.opacity = '1';
+    // Move suffix dynamically based on input length approx
+    sfx.style.left = (Math.max(val.length * 22, 10)) + 'px';
+  } else {
+    sfx.style.opacity = '0';
+  }
+});
 
 function sendAuditWhatsApp() {
   const text = `Hola CrGen. Soy del sector *${auditData.sector}*. He completado la Auditoría.%0A%0A*Monto Operativo Mensual:* ${auditData.cost}%0A*Herramienta Principal:* ${auditData.tool}%0A*Tamanó del Equipo:* ${auditData.size} personas.%0A*Fuga Semanal de Tiempo:* ~${auditData.hours}h copiando/pegando datos.%0A%0ADeseo conversar sobre cómo unificar este flujo y detener el retraso.`;
