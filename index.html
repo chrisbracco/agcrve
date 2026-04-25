@@ -1117,9 +1117,11 @@ footer a:hover { color: var(--black); }
         <h3>¿A cuánto estima que ascienden sus costos operativos mensuales?</h3>
         <p>Entender la escala monetaria nos ayuda a dimensionar la urgencia y el tamaño de la fuga de capital.</p>
       </div>
-      <div class="audit-form" style="position: relative;">
-        <span style="position: absolute; left: 0; bottom: 25px; font-size: 2.2rem; font-weight: 700; color: var(--gray-xlt);">$</span>
-        <input type="text" id="audit-cost" placeholder="15.000" autocomplete="off" style="padding-left: 38px;" />
+      <div class="audit-form">
+        <div style="position: relative; width: 100%;">
+          <span style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); font-size: 2.2rem; font-weight: 700; color: var(--gray-xlt); pointer-events: none;">$</span>
+          <input type="text" id="audit-cost" placeholder="15.000" autocomplete="off" style="padding-left: 38px; width: 100%;" />
+        </div>
         <button class="btn-next-audit" onclick="nextAuditInput(2, 'audit-cost', 'cost')">Siguiente paso <span>→</span></button>
       </div>
     </div>
