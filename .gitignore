@@ -1,0 +1,6 @@
+*.md
+.agents/
+.claude/
+.venv/
+skills-lock.json
+

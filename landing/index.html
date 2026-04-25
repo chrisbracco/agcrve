@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="CrGen diagnostica y elimina el caos documental que impide a su empresa crecer con control. Arquitectura de datos auditable, resultados medibles." />
+<title>CrGen</title>
+<link rel="icon" href="assets/Logo.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+    <defs>
+      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#1d1d1f"/>
+        <stop offset="100%" stop-color="#2b2b30"/>
+      </linearGradient>
+    </defs>
+    <rect width="400" height="300" fill="url(#bg)"/>
+    <text x="200" y="155" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="64" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="-3">Cr<tspan fill="#a1a1a6">Gen</tspan></text>
+    <text x="200" y="195" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#8d8d92" text-anchor="middle" letter-spacing="2">ARCHITECTURE AS A SERVICE</text>
+  </svg>
+</template>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white:      #ffffff;
+  --off-white:  #f5f5f7;
+  --black:      #1d1d1f;
+  --ink:        #2b2b30;
+  --gray:       #6e6e73;
+  --gray-lt:    #a1a1a6;
+  --gray-xlt:   #d2d2d7;
+  --rule:       rgba(0,0,0,0.08);
+  --accent-warn:#c44536;
+  --logo-gray:  #8d8d92;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: var(--white);
+  color: var(--black);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.mono { font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; }
+
+/* Ambient */
+#ambient { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.amb { position: absolute; border-radius: 50%; filter: blur(160px); opacity: 0.09; }
+.amb-1 { width: 900px; height: 900px; background: linear-gradient(120deg, #4A00E0 0%, #8E2DE2 100%); top: -300px; right: -200px; }
+.amb-2 { width: 700px; height: 700px; background: linear-gradient(120deg, #00C9FF 0%, #92FE9D 100%); bottom: 10%; left: -200px; }
+
+/* Crystal */
+.crystal-1 {
+  background: linear-gradient(145deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.5) 100%);
+  backdrop-filter: blur(20px) saturate(180%) brightness(1.05);
+  -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(1.05);
+  border: 1px solid rgba(255,255,255,0.95);
+  box-shadow: inset 0 1.5px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+}
+.crystal-2 {
+  background: linear-gradient(145deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.4) 100%);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.3), inset 0 -1px 2px rgba(0,0,0,0.05), 0 8px 32px rgba(0,0,0,0.08);
+}
+.crystal-3 {
+  background: linear-gradient(160deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.5) 100%);
+  backdrop-filter: blur(60px) saturate(220%);
+  -webkit-backdrop-filter: blur(60px) saturate(220%);
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), inset 0 -2px 4px rgba(0,0,0,0.06), 0 24px 60px rgba(0,0,0,0.1);
+}
+
+/* Nav */
+#nav {
+  position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
+  width: calc(100% - 40px); max-width: 1000px;
+  border-radius: 999px; padding: 10px 10px 10px 22px;
+  display: flex; align-items: center; justify-content: space-between;
+  z-index: 999;
+  transition: max-width 0.5s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+}
+.nav-logo {
+  font-size: 1.2rem; font-weight: 700; letter-spacing: -0.04em;
+  color: var(--logo-gray); text-decoration: none;
+}
+.nav-logo b { color: var(--black); font-weight: 800; }
+.nav-links { display: flex; gap: 2px; list-style: none; align-items: center; }
+.nav-links a {
+  text-decoration: none; color: var(--gray);
+  font-size: 0.82rem; font-weight: 500;
+  padding: 7px 13px; border-radius: 999px;
+  transition: background 0.2s, color 0.2s; letter-spacing: -0.01em;
+}
+.nav-links a:hover { background: rgba(0,0,0,0.05); color: var(--black); }
+.nav-pill {
+  background: var(--black) !important; color: var(--white) !important;
+  font-weight: 600 !important;
+}
+.nav-pill:hover { opacity: 0.85; }
+@media (max-width: 920px) { .nav-links li:nth-child(-n+2) { display: none; } }
+@media (max-width: 680px) { .nav-links li:not(:last-child) { display: none; } }
+
+/* Section wrap */
+section { position: relative; z-index: 1; }
+.section-wrap { max-width: 1120px; margin: 0 auto; padding: 110px 28px; }
+.section-wrap + .section-wrap { padding-top: 0; }
+@media (max-width: 720px) { .section-wrap { padding: 64px 20px; } }
+@media (max-width: 480px) { .section-wrap { padding: 48px 16px; } }
+
+/* Typography */
+.eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--gray-lt); margin-bottom: 20px;
+}
+h1 {
+  font-size: clamp(2.8rem, 7vw, 5.4rem); font-weight: 800;
+  letter-spacing: -0.05em; line-height: 1.0; color: var(--black); margin-bottom: 28px;
+}
+h1 .muted { color: var(--gray); }
+h2 {
+  font-size: clamp(2rem, 4.8vw, 3.4rem); font-weight: 800;
+  letter-spacing: -0.045em; line-height: 1.05; color: var(--black);
+}
+h3 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.035em; line-height: 1.2; color: var(--black); }
+h4 { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.025em; line-height: 1.3; color: var(--black); }
+.lead {
+  font-size: clamp(1.02rem, 1.8vw, 1.2rem); color: var(--gray); line-height: 1.6;
+  max-width: 640px; font-weight: 400; letter-spacing: -0.01em;
+}
+@media (max-width: 480px) { 
+  h1 { margin-bottom: 20px; }
+  h2 { font-size: 1.8rem; }
+  .lead { font-size: 1rem; line-height: 1.5; }
+}
+p { line-height: 1.65; color: var(--ink); letter-spacing: -0.005em; }
+.section-header { margin-bottom: 56px; }
+.section-header h2 + .lead { margin-top: 18px; }
+.section-header.center { text-align: center; max-width: 760px; margin-left: auto; margin-right: auto; }
+.section-header.center .lead { margin-left: auto; margin-right: auto; }
+
+/* Hero */
+#hero {
+  min-height: 100svh;
+  padding: 160px 24px 100px;
+  display: grid; place-items: center; text-align: center;
+}
+.hero-inner { max-width: 880px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px 6px 10px; border-radius: 999px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem; font-weight: 600; color: var(--gray);
+  letter-spacing: 0.05em; text-transform: uppercase;
+  margin-bottom: 36px;
+}
+.badge-dot { width: 8px; height: 8px; border-radius: 50%; background: #30d158; box-shadow: 0 0 0 3px rgba(48,209,88,.22); }
+.hero-sub {
+  font-size: clamp(1.05rem, 2.1vw, 1.28rem); color: var(--gray);
+  line-height: 1.65; max-width: 600px; margin: 0 auto 44px;
+}
+@media (max-width: 480px) { 
+  .hero-inner { padding-top: 20px; }
+  .hero-badge { margin-bottom: 24px; padding: 6px 12px; font-size: 0.65rem; }
+  .hero-sub { margin-bottom: 32px; font-size: 1rem; }
+  .cta-row { flex-direction: column; width: 100%; }
+  .cta-row .btn { width: 100%; justify-content: center; }
+}
+.cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 14px 28px; border-radius: 999px; font-size: 0.95rem;
+  font-weight: 600; letter-spacing: -0.02em; cursor: pointer;
+  text-decoration: none; border: none;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s, opacity 0.2s;
+}
+.btn-solid { background: var(--black); color: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,0.18); }
+.btn-solid:hover { transform: scale(1.04); box-shadow: 0 8px 32px rgba(0,0,0,0.26); }
+.btn-ghost { color: var(--black); border: 1px solid var(--rule); }
+.btn-ghost:hover { transform: scale(1.04); background: rgba(0,0,0,0.03); }
+
+/* Signal counter hero widget */
+.signal-widget {
+  margin: 56px auto 0; max-width: 540px;
+  padding: 20px 24px; border-radius: 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+}
+.signal-widget .sw-copy { text-align: left; }
+.signal-widget .mono {
+  font-size: 0.64rem; color: var(--gray-lt); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600;
+  display: block; margin-bottom: 4px;
+}
+.signal-widget .sw-copy strong {
+  font-size: 1.02rem; font-weight: 700; letter-spacing: -0.025em; color: var(--black); display:block;
+}
+.signal-widget .sw-copy span { font-size: 0.82rem; color: var(--gray); }
+.signal-widget .btn { padding: 10px 18px; font-size: 0.85rem; }
+@media (max-width: 540px) { 
+  .signal-widget { flex-direction: column; text-align: center; gap: 16px; padding: 24px 20px; }
+  .signal-widget .sw-copy { text-align: center; }
+  .signal-widget .btn { width: 100%; justify-content: center; }
+}
+
+/* Symptoms */
+.symptom-list { display: flex; flex-direction: column; gap: 12px; }
+.symptom {
+  display: grid; grid-template-columns: 70px 1fr auto;
+  gap: 24px; align-items: center;
+  padding: 28px 32px; border-radius: 20px;
+  border: 1px solid var(--rule); background: #fff;
+  transition: background 0.25s, transform 0.25s;
+}
+.symptom:hover { background: #fafafa; transform: translateY(-2px); }
+@media (max-width: 720px) { .symptom { grid-template-columns: 56px 1fr; gap: 18px; padding: 22px 22px; } .symptom .sym-check { grid-column: 1 / span 2; } }
+
+.sym-num {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 800; font-size: 2rem; letter-spacing: -0.05em;
+  color: var(--black); line-height: 1;
+}
+.sym-body h4 { margin-bottom: 6px; }
+.sym-body p { font-size: 0.9rem; color: var(--gray); }
+
+.sym-check {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: "JetBrains Mono", monospace; font-size: 0.72rem;
+  color: var(--gray); letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 8px 14px; border-radius: 999px; border: 1px solid var(--rule);
+  cursor: pointer; user-select: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.sym-check .box {
+  width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid var(--gray-lt);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 0.2s, border-color 0.2s;
+}
+.sym-check .box svg { opacity: 0; transition: opacity 0.15s; }
+.symptom.checked .sym-check { background: var(--black); color: var(--white); border-color: var(--black); }
+.symptom.checked .sym-check .box { background: var(--white); border-color: var(--white); }
+.symptom.checked .sym-check .box svg { opacity: 1; }
+
+/* Pillars (4) */
+.pillar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media (max-width: 980px) { .pillar-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .pillar-grid { grid-template-columns: 1fr; } }
+
+.pillar {
+  padding: 32px 28px; border-radius: 22px;
+  display: flex; flex-direction: column; gap: 14px;
+  min-height: 300px;
+}
+.pillar-num {
+  font-family: "JetBrains Mono", monospace; font-size: 0.7rem;
+  font-weight: 600; color: var(--gray-lt); letter-spacing: 0.12em;
+}
+.pillar h3 { font-size: 1.1rem; }
+.pillar p { font-size: 0.88rem; color: var(--gray); }
+.pillar-stat {
+  margin-top: auto; padding-top: 16px; border-top: 1px solid var(--rule);
+}
+.pillar-stat b {
+  display: block; font-size: 1.6rem; font-weight: 800;
+  letter-spacing: -0.045em; color: var(--black); line-height: 1; margin-bottom: 4px;
+}
+.pillar-stat span { font-size: 0.78rem; color: var(--gray); letter-spacing: -0.005em; }
+
+/* Data viz section */
+.data-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+@media (max-width: 820px) { .data-grid { grid-template-columns: 1fr; } }
+
+.data-card {
+  padding: 32px 32px; border-radius: 22px;
+  display: flex; flex-direction: column; gap: 18px;
+  min-height: 320px;
+}
+.data-card .dc-eyebrow {
+  font-family: "JetBrains Mono", monospace; font-size: 0.66rem;
+  color: var(--gray-lt); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600;
+}
+.data-card h4 { font-size: 1.1rem; letter-spacing: -0.03em; }
+.data-card p { font-size: 0.88rem; color: var(--gray); }
+
+.chart-frame {
+  border-radius: 14px; border: 1px solid var(--rule);
+  background: #fafafa; padding: 18px; aspect-ratio: 16/9;
+}
+.chart-frame svg { display: block; width: 100%; height: 100%; }
+
+.compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
+.compare-cell { padding: 14px 16px; border-radius: 12px; border: 1px solid var(--rule); }
+.compare-cell.bad { background: rgba(196,69,54,0.06); border-color: rgba(196,69,54,0.2); }
+.compare-cell.good { background: var(--black); color: #fff; border-color: var(--black); }
+.compare-cell .mono { font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; margin-bottom: 6px; display:block; }
+.compare-cell.bad .mono { color: var(--accent-warn); }
+.compare-cell.good .mono { color: rgba(255,255,255,0.55); }
+.compare-cell b { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.04em; display:block; line-height: 1.1; }
+.compare-cell span { font-size: 0.76rem; opacity: 0.8; }
+
+/* Method 3 steps */
+.method-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 820px) { .method-grid { grid-template-columns: 1fr; } }
+.method-card {
+  padding: 44px 36px; border-radius: 24px;
+  display: flex; flex-direction: column; gap: 16px;
+  position: relative; overflow: hidden; min-height: 300px;
+}
+.method-num {
+  font-family: "JetBrains Mono", monospace; font-size: 0.72rem;
+  color: var(--gray-lt); letter-spacing: 0.12em; font-weight: 600;
+}
+.method-card h3 { font-size: 1.3rem; }
+.method-card > p { font-size: 0.92rem; color: var(--gray); }
+.method-duration {
+  margin-top: auto; padding-top: 16px; border-top: 1px solid var(--rule);
+  display: flex; align-items: baseline; gap: 10px;
+}
+.method-duration b {
+  font-size: 1.4rem; font-weight: 800; letter-spacing: -0.04em; color: var(--black);
+}
+.method-duration span {
+  font-family: "JetBrains Mono", monospace; font-size: 0.7rem;
+  color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase;
+}
+
+/* Impact banner */
+.impact-banner {
+  border-radius: 28px; padding: 48px 48px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0; text-align: center;
+  border: 1px solid var(--rule); background: #fff;
+}
+@media (max-width: 820px) { .impact-banner { grid-template-columns: repeat(2, 1fr); gap: 28px 0; padding: 40px 28px; } }
+@media (max-width: 480px) { .impact-banner { grid-template-columns: 1fr; } }
+.impact-stat { padding: 0 16px; border-right: 1px solid var(--rule); }
+.impact-stat:last-child { border-right: none; }
+@media (max-width: 820px) {
+  .impact-stat:nth-child(2n) { border-right: none; }
+}
+.impact-stat strong {
+  display: block; font-size: 2.2rem; font-weight: 800;
+  letter-spacing: -0.05em; color: var(--black); margin-bottom: 6px; line-height: 1;
+}
+.impact-stat p { font-size: 0.82rem; color: var(--gray); line-height: 1.45; }
+
+/* Guarantee */
+.guarantee-card {
+  border-radius: 32px; padding: 56px 56px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;
+}
+@media (max-width: 900px) { .guarantee-card { grid-template-columns: 1fr; gap: 36px; padding: 44px 32px; } }
+.guarantee-left h2 { font-size: 2.1rem; letter-spacing: -0.035em; line-height: 1.05; }
+.guarantee-list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--rule); }
+.guarantee-list li {
+  display: grid; grid-template-columns: 96px 1fr; row-gap: 4px; column-gap: 16px;
+  padding: 18px 0; border-bottom: 1px solid var(--rule);
+}
+.g-day {
+  font-family: "JetBrains Mono", monospace; font-size: 0.72rem;
+  color: var(--gray-lt); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600;
+  grid-row: 1 / span 2; align-self: center;
+}
+.guarantee-list li strong { font-size: 1rem; font-weight: 800; letter-spacing: -0.025em; color: var(--black); }
+.g-desc { font-size: 0.86rem; color: var(--gray); line-height: 1.5; }
+
+/* Plans */
+.plan-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  align-items: stretch;
+}
+@media (max-width: 980px) { .plan-grid { grid-template-columns: 1fr; } }
+.plan {
+  padding: 40px 34px; border-radius: 26px;
+  display: flex; flex-direction: column; gap: 18px; position: relative; min-height: 540px;
+}
+.plan-featured { transform: translateY(-12px); box-shadow: 0 24px 60px rgba(0,0,0,0.10), inset 0 1.5px 0 rgba(255,255,255,1); }
+@media (max-width: 980px) { .plan-featured { transform: none; } }
+.plan-badge {
+  position: absolute; top: 18px; right: 18px;
+  font-family: "JetBrains Mono", monospace; font-size: 0.62rem;
+  padding: 5px 10px; border-radius: 999px;
+  background: var(--black); color: var(--white);
+  letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600;
+}
+.plan-tag {
+  font-family: "JetBrains Mono", monospace; font-size: 0.68rem;
+  color: var(--gray-lt); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600;
+}
+.plan h3 { font-size: 1.4rem; letter-spacing: -0.03em; }
+.plan-sub { font-size: 0.88rem; color: var(--gray); line-height: 1.5; }
+.plan-price {
+  display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+  padding-top: 10px; border-top: 1px solid var(--rule);
+}
+.plan-from { font-family: "JetBrains Mono", monospace; font-size: 0.7rem; color: var(--gray-lt); letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
+.plan-price b { font-size: 2.4rem; font-weight: 800; letter-spacing: -0.045em; color: var(--black); line-height: 1; }
+.plan-unit { font-size: 0.78rem; color: var(--gray); font-weight: 600; }
+.plan-hours {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 10px 0; border-bottom: 1px solid var(--rule);
+}
+.plan-hours .mono { font-size: 0.74rem; color: var(--black); font-weight: 600; letter-spacing: 0.04em; }
+.plan-hours span:last-child { font-size: 0.76rem; color: var(--gray); }
+.plan-list { list-style: none; padding: 0; margin: 4px 0; display: flex; flex-direction: column; gap: 8px; }
+.plan-list li {
+  font-size: 0.86rem; color: var(--ink); line-height: 1.5;
+  padding-left: 20px; position: relative;
+}
+.plan-list li::before {
+  content: ""; position: absolute; left: 0; top: 8px;
+  width: 10px; height: 6px;
+  border-left: 1.6px solid var(--black); border-bottom: 1.6px solid var(--black);
+  transform: rotate(-45deg);
+}
+.plan-cta { margin-top: auto; text-align: center; justify-content: center; }
+.plan-foot {
+  margin-top: 28px; font-size: 0.8rem; color: var(--gray); text-align: center;
+  max-width: 720px; margin-left: auto; margin-right: auto; line-height: 1.55;
+}
+
+/* CTA (Lead magnet) */
+#lead {
+  padding: 60px 24px 120px; max-width: 960px; margin: 0 auto; text-align: center;
+  position: relative; z-index: 1;
+}
+.cta-panel { border-radius: 32px; padding: 72px 56px; }
+@media (max-width: 580px) { .cta-panel { padding: 52px 28px; } }
+.cta-panel h2 { margin-bottom: 18px; }
+.cta-panel .lead { margin: 0 auto 36px; max-width: 500px; }
+
+.cta-steps {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0; margin-top: 44px; text-align: left;
+  border-top: 1px solid var(--rule);
+}
+@media (max-width: 680px) { .cta-steps { grid-template-columns: 1fr; } }
+.cta-step {
+  padding: 24px 22px;
+  border-right: 1px solid var(--rule);
+}
+.cta-step:last-child { border-right: none; }
+@media (max-width: 680px) { .cta-step { border-right: none; border-bottom: 1px solid var(--rule); } .cta-step:last-child { border-bottom: none; } }
+.cta-step .mono { font-family: "JetBrains Mono", monospace; font-size: 0.64rem; color: var(--gray-lt); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; display:block; margin-bottom: 8px; }
+.cta-step h4 { font-size: 0.95rem; margin-bottom: 6px; letter-spacing: -0.02em; }
+.cta-step p { font-size: 0.82rem; color: var(--gray); line-height: 1.5; }
+
+/* Footer */
+footer {
+  max-width: 1120px; margin: 0 auto;
+  border-top: 1px solid var(--rule); padding: 32px 28px 60px;
+  display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: center;
+  position: relative; z-index: 1;
+  font-size: 0.82rem; color: var(--gray);
+}
+footer a { color: var(--gray); text-decoration: none; }
+footer a:hover { color: var(--black); }
+.footer-links { display: flex; gap: 24px; }
+
+/* Scroll reveal */
+.sr { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.sr.in { opacity: 1; transform: translateY(0); }
+
+/* Floating dock */
+#float-dock {
+  position: fixed; bottom: 32px; right: 32px; z-index: 500;
+  display: flex; flex-direction: column; gap: 12px; align-items: center;
+  opacity: 0; pointer-events: none; transform: translateY(20px) scale(0.92);
+  transition: opacity 0.4s, transform 0.4s;
+}
+#float-dock.visible { opacity: 1; pointer-events: auto; transform: none; }
+.float-btn {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none; color: #fff;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.float-btn:hover { transform: scale(1.12); }
+#wa-float {
+  background: linear-gradient(145deg, #25D366 0%, #128C7E 100%);
+  box-shadow: 0 6px 24px rgba(37,211,102,0.45), inset 0 1.5px 0 rgba(255,255,255,0.22);
+}
+@media (max-width: 480px) { #float-dock { bottom: 20px; right: 16px; } }
+</style>
+</head>
+<body>
+
+<div id="ambient" aria-hidden="true">
+  <div class="amb amb-1"></div>
+  <div class="amb amb-2"></div>
+</div>
+
+<nav id="nav" class="crystal-1">
+  <a href="#" class="nav-logo">Cr<b>Gen</b></a>
+  <ul class="nav-links">
+    <li><a href="#senales">Las señales</a></li>
+    <li><a href="#pilares">Los 4 pilares</a></li>
+    <li><a href="#metodo">Cómo trabajamos</a></li>
+    <li><a href="#planes">Planes</a></li>
+    <li><a href="#lead" class="nav-pill">Diagnóstico →</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <span class="hero-badge crystal-2"><span class="badge-dot"></span>Agenda con diagnóstico previo</span>
+
+    <h1>
+      Su empresa creció.<br>
+      <span class="muted">Su estructura</span><br>
+      se quedó atrás.
+    </h1>
+
+    <p class="hero-sub">
+      Diagnosticamos el desorden operativo invisible que hace que su negocio dependa de personas, no de procesos, y lo transformamos en una arquitectura de datos auditable y escalable.
+    </p>
+
+    <div class="cta-row">
+      <a href="#lead" class="btn btn-solid">Hacer mi diagnóstico gratis →</a>
+      <a href="#senales" class="btn btn-ghost">Ver las señales</a>
+    </div>
+
+    <div class="signal-widget crystal-2">
+      <div class="sw-copy">
+        <span class="mono">Test rápido · 5 señales</span>
+        <strong>Si reconoce 3 o más, es momento de hablar.</strong>
+        <span>Recorra las señales y marque las que le suceden hoy.</span>
+      </div>
+      <a href="#senales" class="btn btn-solid">Empezar →</a>
+    </div>
+  </div>
+</section>
+
+<!-- SEÑALES (problema) -->
+<section id="senales" class="section-wrap">
+  <div class="section-header">
+    <p class="eyebrow">El Problema</p>
+    <h2>5 señales de que su empresa<br>opera sin control real.</h2>
+    <p class="lead">Marque las que suceden en su operación hoy. El contador le dirá dónde está parado y si tiene sentido que hablemos.</p>
+  </div>
+
+  <div class="symptom-list" id="symptoms">
+    <div class="symptom" data-id="1">
+      <span class="sym-num">01</span>
+      <div class="sym-body">
+        <h4>La información está repartida entre Excels, correos y WhatsApp.</h4>
+        <p>Armar un reporte simple toma más de una hora y siempre se siente que falta algo. Nadie confía del todo en el número final.</p>
+      </div>
+      <span class="sym-check"><span class="box"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5.2L4 7.5L8.5 2" stroke="#1d1d1f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Me pasa</span>
+    </div>
+
+    <div class="symptom" data-id="2">
+      <span class="sym-num">02</span>
+      <div class="sym-body">
+        <h4>Hay clientes que se enfrían y nadie lo nota a tiempo.</h4>
+        <p>No existe una alerta temprana. Se descubre la fuga cuando el cliente ya dejó de comprar hace meses y recuperar la cuenta es el doble de caro.</p>
+      </div>
+      <span class="sym-check"><span class="box"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5.2L4 7.5L8.5 2" stroke="#1d1d1f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Me pasa</span>
+    </div>
+
+    <div class="symptom" data-id="3">
+      <span class="sym-num">03</span>
+      <div class="sym-body">
+        <h4>Las decisiones se toman por intuición, no por datos.</h4>
+        <p>Precios, contrataciones y compras dependen del criterio del dueño. Nadie más tiene visibilidad real. El negocio no escala, se replica la cabeza del dueño.</p>
+      </div>
+      <span class="sym-check"><span class="box"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5.2L4 7.5L8.5 2" stroke="#1d1d1f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Me pasa</span>
+    </div>
+
+    <div class="symptom" data-id="4">
+      <span class="sym-num">04</span>
+      <div class="sym-body">
+        <h4>Un proceso crítico lo entiende solo una persona.</h4>
+        <p>Si esa persona se va de vacaciones o renuncia, el área se detiene. El conocimiento vive en una cabeza, no en un proceso. Es el riesgo silencioso más caro de cualquier PyME.</p>
+      </div>
+      <span class="sym-check"><span class="box"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5.2L4 7.5L8.5 2" stroke="#1d1d1f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Me pasa</span>
+    </div>
+
+    <div class="symptom" data-id="5">
+      <span class="sym-num">05</span>
+      <div class="sym-body">
+        <h4>El equipo pierde horas en tareas repetitivas de copiar y pegar.</h4>
+        <p>Facturación, cobranza, reportes, seguimiento. Tareas que podrían ejecutarse solas consumen días completos y dejan al equipo sin tiempo para lo que sí requiere criterio.</p>
+      </div>
+      <span class="sym-check"><span class="box"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5.2L4 7.5L8.5 2" stroke="#1d1d1f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Me pasa</span>
+    </div>
+  </div>
+
+  <!-- Live counter result -->
+  <div id="sym-result" style="margin-top: 28px; padding: 24px 28px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; border: 1px solid var(--rule); background: #fff;">
+    <div>
+      <span class="mono" style="font-size: 0.66rem; color: var(--gray-lt); letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; display:block; margin-bottom: 6px;">Su resultado en vivo</span>
+      <strong id="sym-count-label" style="font-size: 1.1rem; font-weight: 800; letter-spacing: -0.025em; color: var(--black);">Marque las señales que le suceden</strong>
+      <div id="sym-verdict" style="font-size: 0.88rem; color: var(--gray); margin-top: 4px;">Al marcar 3 o más, tiene sentido que hablemos.</div>
+    </div>
+    <a href="#lead" class="btn btn-solid" id="sym-cta" style="opacity: 0.4; pointer-events: none;">Agendar diagnóstico →</a>
+  </div>
+</section>
+
+<!-- 4 PILLARS (solución) -->
+<section id="pilares" class="section-wrap">
+  <div class="section-header">
+    <p class="eyebrow">La Solución</p>
+    <h2>4 pilares de control.<br>Interconectados, no aislados.</h2>
+    <p class="lead">No resolvemos una señal por separado. Si solo se toca una, las otras vuelven. La arquitectura de CrGen trabaja los cuatro pilares en paralelo.</p>
+  </div>
+
+  <div class="pillar-grid">
+    <div class="pillar crystal-2">
+      <span class="pillar-num">PILAR 01</span>
+      <h3>Operación</h3>
+      <p>Quién hace qué, cuándo y con qué criterio. Dejar que el negocio dependa de procesos y no de personas específicas.</p>
+      <div class="pillar-stat">
+        <b>−81%</b>
+        <span>Dependencia de personas clave en procesos críticos</span>
+      </div>
+    </div>
+
+    <div class="pillar crystal-2">
+      <span class="pillar-num">PILAR 02</span>
+      <h3>Automatización</h3>
+      <p>Eliminar el trabajo manual repetitivo que consume horas semanales a cada persona y devolverle ese tiempo al equipo.</p>
+      <div class="pillar-stat">
+        <b>+14h</b>
+        <span>Promedio semanal recuperado por colaborador</span>
+      </div>
+    </div>
+
+    <div class="pillar crystal-2">
+      <span class="pillar-num">PILAR 03</span>
+      <h3>KPIs</h3>
+      <p>Cinco números clave que sí mueven el negocio, en lugar de 50 métricas de vanidad que distraen y no se usan.</p>
+      <div class="pillar-stat">
+        <b>5</b>
+        <span>Indicadores vivos que reemplazan los reportes mensuales</span>
+      </div>
+    </div>
+
+    <div class="pillar crystal-2">
+      <span class="pillar-num">PILAR 04</span>
+      <h3>Reportes</h3>
+      <p>Dashboards que se leen en 5 minutos y permiten decidir el mismo día. No exportaciones de ERP de 47 páginas.</p>
+      <div class="pillar-stat">
+        <b>5 min</b>
+        <span>Para entender el estado de la operación completa</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISUAL DATA · antes vs después -->
+<section class="section-wrap" style="padding-top: 0;">
+  <div class="section-header">
+    <p class="eyebrow">Por qué importa ahora</p>
+    <h2>Ver la ineficiencia<br>con sus propios ojos.</h2>
+    <p class="lead">Lo que hoy pasa desapercibido y lo que pasa cuando la arquitectura está en su lugar. Misma empresa, mismo equipo.</p>
+  </div>
+
+  <div class="data-grid">
+    <!-- Chart 1: Intuición vs Datos -->
+    <div class="data-card crystal-2">
+      <span class="dc-eyebrow">Gráfico 01 · Toma de decisiones</span>
+      <h4>Intuición vs. Datos.</h4>
+      <p>La intuición genera resultados erráticos y no replicables. Los datos generan una tendencia predecible sobre la que sí se puede construir.</p>
+      <div class="chart-frame">
+        <svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <g stroke="#e5e5ea" stroke-width="1">
+            <line x1="40" y1="30" x2="40" y2="190"/>
+            <line x1="40" y1="190" x2="380" y2="190"/>
+          </g>
+          <!-- Intuición scatter -->
+          <g fill="#c44536" opacity="0.7">
+            <circle cx="70" cy="120" r="4"/><circle cx="95" cy="75" r="4"/>
+            <circle cx="120" cy="150" r="4"/><circle cx="145" cy="60" r="4"/>
+            <circle cx="170" cy="130" r="4"/><circle cx="195" cy="90" r="4"/>
+            <circle cx="220" cy="160" r="4"/><circle cx="245" cy="55" r="4"/>
+            <circle cx="270" cy="140" r="4"/><circle cx="295" cy="100" r="4"/>
+            <circle cx="320" cy="170" r="4"/><circle cx="345" cy="70" r="4"/>
+          </g>
+          <!-- Datos trend -->
+          <path d="M 50 170 Q 150 130 250 85 T 370 35" stroke="#1d1d1f" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <g fill="#1d1d1f">
+            <circle cx="50" cy="170" r="3.5"/><circle cx="110" cy="150" r="3.5"/>
+            <circle cx="170" cy="120" r="3.5"/><circle cx="230" cy="95" r="3.5"/>
+            <circle cx="290" cy="65" r="3.5"/><circle cx="370" cy="35" r="3.5"/>
+          </g>
+          <!-- legend -->
+          <g font-family="JetBrains Mono, monospace" font-size="9" font-weight="600">
+            <circle cx="55" cy="210" r="4" fill="#c44536"/>
+            <text x="66" y="213" fill="#6e6e73">INTUICIÓN</text>
+            <circle cx="170" cy="210" r="4" fill="#1d1d1f"/>
+            <text x="181" y="213" fill="#6e6e73">DATOS</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Chart 2: Clientes activos -->
+    <div class="data-card crystal-2">
+      <span class="dc-eyebrow">Gráfico 02 · Fuga de clientes</span>
+      <h4>Clientes activos sin alerta temprana.</h4>
+      <p>Cuando nadie vigila la señal, la caída se descubre tarde. Un dashboard sobre la Fuente de Verdad avisa en el primer mes, no en el sexto.</p>
+      <div class="chart-frame">
+        <svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <g stroke="#e5e5ea" stroke-width="1">
+            <line x1="40" y1="30" x2="40" y2="190"/>
+            <line x1="40" y1="190" x2="380" y2="190"/>
+            <line x1="40" y1="60"  x2="380" y2="60"  stroke-dasharray="3,4" opacity="0.6"/>
+            <line x1="40" y1="110" x2="380" y2="110" stroke-dasharray="3,4" opacity="0.6"/>
+            <line x1="40" y1="160" x2="380" y2="160" stroke-dasharray="3,4" opacity="0.6"/>
+          </g>
+          <!-- Downward trend -->
+          <path d="M 60 55 L 120 70 L 180 95 L 240 130 L 300 155 L 360 178" stroke="#c44536" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <g fill="#c44536">
+            <circle cx="60" cy="55" r="4"/><circle cx="120" cy="70" r="4"/>
+            <circle cx="180" cy="95" r="4"/><circle cx="240" cy="130" r="4"/>
+            <circle cx="300" cy="155" r="4"/><circle cx="360" cy="178" r="4"/>
+          </g>
+          <!-- Fill under -->
+          <path d="M 60 55 L 120 70 L 180 95 L 240 130 L 300 155 L 360 178 L 360 190 L 60 190 Z" fill="#c44536" opacity="0.06"/>
+          <!-- X labels -->
+          <g font-family="JetBrains Mono, monospace" font-size="9" fill="#a1a1a6" text-anchor="middle">
+            <text x="60" y="208">ENE</text><text x="120" y="208">FEB</text><text x="180" y="208">MAR</text>
+            <text x="240" y="208">ABR</text><text x="300" y="208">MAY</text><text x="360" y="208">JUN</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Chart 3: Bar · Manual vs auto -->
+    <div class="data-card crystal-2">
+      <span class="dc-eyebrow">Gráfico 03 · Distribución de tareas</span>
+      <h4>78% manual. 22% automatizado.</h4>
+      <p>La mayoría del tiempo del equipo se gasta en tareas que no requieren criterio. Invertir la proporción es el primer retorno visible del sistema.</p>
+      <div class="chart-frame">
+        <svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <g stroke="#e5e5ea" stroke-width="1">
+            <line x1="60" y1="40" x2="60" y2="180"/>
+            <line x1="60" y1="180" x2="380" y2="180"/>
+          </g>
+          <!-- Bars -->
+          <rect x="100" y="50" width="90" height="130" rx="4" fill="#c44536" opacity="0.88"/>
+          <rect x="240" y="143" width="90" height="37" rx="4" fill="#1d1d1f"/>
+          <!-- Labels -->
+          <g font-family="-apple-system, sans-serif" font-size="18" font-weight="800" fill="#fff" text-anchor="middle" letter-spacing="-0.5">
+            <text x="145" y="88">78%</text>
+          </g>
+          <g font-family="-apple-system, sans-serif" font-size="14" font-weight="800" fill="#fff" text-anchor="middle" letter-spacing="-0.3">
+            <text x="285" y="167">22%</text>
+          </g>
+          <g font-family="JetBrains Mono, monospace" font-size="9" fill="#6e6e73" text-anchor="middle" font-weight="600">
+            <text x="145" y="200">MANUAL</text>
+            <text x="285" y="200">AUTOMÁTICO</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Chart 4: Sin sistema vs con sistema -->
+    <div class="data-card crystal-2">
+      <span class="dc-eyebrow">Gráfico 04 · Impacto del sistema</span>
+      <h4>62h/semana vs. 40h/semana.</h4>
+      <p>Sin arquitectura, se trabaja más para obtener menos. Con arquitectura, la operación devuelve horas y da resultados medibles.</p>
+      <div class="compare-row" style="margin-top: auto;">
+        <div class="compare-cell bad">
+          <span class="mono">Sin sistema</span>
+          <b>62h / semana</b>
+          <span>Resultados inciertos</span>
+        </div>
+        <div class="compare-cell good">
+          <span class="mono">Con sistema</span>
+          <b>40h / semana</b>
+          <span>Resultados medibles</span>
+        </div>
+      </div>
+      <div class="compare-row" style="margin-top: 8px;">
+        <div class="compare-cell bad">
+          <span class="mono">Export ERP</span>
+          <b>47 min</b>
+          <span>Para leer un reporte</span>
+        </div>
+        <div class="compare-cell good">
+          <span class="mono">Dashboard</span>
+          <b>5 min</b>
+          <span>Para decidir</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACTO -->
+<section class="section-wrap" style="padding-top: 0;">
+  <div class="impact-banner">
+    <div class="impact-stat"><strong>14h</strong><p>Recuperadas por persona cada semana</p></div>
+    <div class="impact-stat"><strong>−81%</strong><p>Dependencia de personas en procesos críticos</p></div>
+    <div class="impact-stat"><strong>5 min</strong><p>Leer el estado real del negocio</p></div>
+    <div class="impact-stat"><strong>70%</strong><p>Tareas operativas automatizables</p></div>
+  </div>
+</section>
+
+<!-- METODO -->
+<section id="metodo" class="section-wrap">
+  <div class="section-header">
+    <p class="eyebrow">Cómo trabajamos</p>
+    <h2>Tres pasos.<br>Sin proyectos abiertos.</h2>
+    <p class="lead">Un proceso claro con entregables fijos en cada etapa. Usted sabe exactamente qué recibe y cuándo.</p>
+  </div>
+
+  <div class="method-grid">
+    <div class="method-card crystal-2">
+      <span class="method-num">PASO 01</span>
+      <h3>Diagnóstico</h3>
+      <p>Entendemos su operación real en una sesión guiada de 15 minutos. Sale con una foto clara de dónde está parado y qué tiene sentido hacer primero.</p>
+      <div class="method-duration"><b>15 min</b><span>Sesión inicial</span></div>
+    </div>
+    <div class="method-card crystal-2">
+      <span class="method-num">PASO 02</span>
+      <h3>Implementación</h3>
+      <p>Ejecutamos sobre las herramientas que usted ya usa. Sin reemplazar sistemas, sin interrumpir la operación. El equipo conserva su flujo y gana la estructura que le falta.</p>
+      <div class="method-duration"><b>7–30 días</b><span>Según complejidad</span></div>
+    </div>
+    <div class="method-card crystal-3">
+      <span class="method-num">PASO 03</span>
+      <h3>Control</h3>
+      <p>Seguimiento con datos vivos. El dashboard queda en sus manos, con alertas y revisiones periódicas. Su operación deja de depender de que alguien arme un reporte a mano.</p>
+      <div class="method-duration"><b>Continuo</b><span>Revisión mensual</span></div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- PLANES -->
+<section id="planes" class="section-wrap">
+  <div class="section-header">
+    <p class="eyebrow">Inversión</p>
+    <h2>Tres formas de trabajar<br>con CrGen.</h2>
+    <p class="lead">Cada plan se factura por horas de asesoría y consultoría aplicadas a su operación. Sin suscripciones ocultas, sin licencias forzadas, sin compromiso anual. Si no aportamos valor, no continuamos.</p>
+  </div>
+
+  <div class="plan-grid">
+    <div class="plan crystal-2">
+      <span class="plan-tag">Nivel I · Diagnóstico</span>
+      <h3>Auditoría de Deuda Digital</h3>
+      <p class="plan-sub">Diagnóstico profundo de fugas operativas y mapa de caos documental inicial.</p>
+      <div class="plan-price">
+        <span class="plan-from">Desde</span>
+        <b>$3.000</b>
+        <span class="plan-unit">USD</span>
+      </div>
+      <div class="plan-hours"><span class="mono">20 horas de consultoría clínica</span><span>Entrega en 7 días</span></div>
+      <ul class="plan-list">
+        <li>Mapa de Arqueología de Datos</li>
+        <li>Identificación de 5 Síntomas Tóxicos</li>
+        <li>Business Case de Retorno de Inversión</li>
+        <li>Hoja de ruta para el Atlas Documental</li>
+      </ul>
+      <a href="https://wa.me/584122984632?text=Quiero%20solicitar%20el%20Diagn%C3%B3stico%20de%20Deuda%20Digital" target="_blank" rel="noopener" class="btn btn-ghost plan-cta">Solicitar Diagnóstico</a>
+    </div>
+
+    <div class="plan plan-featured crystal-3">
+      <span class="plan-badge">AaaS Premium</span>
+      <span class="plan-tag">Nivel II · Implementación</span>
+      <h3>Arquitectura Atlas Documental</h3>
+      <p class="plan-sub">Construcción de la infraestructura semántica y saneamiento del caos histórico.</p>
+      <div class="plan-price">
+        <span class="plan-from">Desde</span>
+        <b>$7.500</b>
+        <span class="plan-unit">USD</span>
+      </div>
+      <div class="plan-hours"><span class="mono">60 horas de arquitectura activa</span><span>Despliegue en 4-6 semanas</span></div>
+      <ul class="plan-list">
+        <li>Pipeline de 5 fases (Crawler a M365)</li>
+        <li>Eliminación de Silos de Conocimiento</li>
+        <li>Estructuración de Base de Datos Semántica</li>
+        <li>Handoff de Activos de Inteligencia</li>
+        <li>Soporte de estabilización (30 días)</li>
+      </ul>
+      <a href="https://wa.me/584122984632?text=Quiero%20implementar%20la%20Arquitectura%20Atlas%20Documental" target="_blank" rel="noopener" class="btn btn-solid plan-cta">Iniciar Transformación</a>
+    </div>
+
+    <div class="plan crystal-2">
+      <span class="plan-tag">Enterprise AaaS</span>
+      <h3>Arquitectura a Medida</h3>
+      <p class="plan-sub">Para operaciones volumétricas que requieren infraestructura dedicada e integración total.</p>
+      <div class="plan-price" style="margin-bottom: 24px;">
+        <span class="plan-from">Inversión</span>
+        <b>Sujeta a Volumen</b>
+      </div>
+      <div class="plan-hours"><span class="mono">Despliegue Dedicado</span><span>Soporte 24/7 y SLA</span></div>
+      <ul class="plan-list">
+        <li>Todo lo del Nivel II a escala</li>
+        <li>Infraestructura Local dedicada (Ollama)</li>
+        <li>Integraciones complejas (ERP / APIs)</li>
+        <li>Acceso prioritario al equipo fundador</li>
+      </ul>
+      <a href="https://wa.me/584122984632?text=Quiero%20solicitar%20evaluaci%C3%B3n%20Enterprise" target="_blank" rel="noopener" class="btn btn-ghost plan-cta">Solicitar evaluación</a>
+    </div>
+  </div>
+
+  <p class="plan-foot">Todos los planes se facturan contra horas trabajadas y entregables firmados. Cotizaciones finales se ajustan al alcance del diagnóstico. Se trabaja con NDA y confidencialidad desde la primera llamada.</p>
+</section>
+
+<!-- LEAD MAGNET -->
+<section id="lead">
+  <div class="cta-panel crystal-3">
+    <p class="eyebrow">Diagnóstico gratuito</p>
+    <h2>Si marcó 3 o más señales,<br>tiene sentido que hablemos.</h2>
+    <p class="lead">Agende 15 minutos y reciba una lectura ejecutiva del estado real de su operación. Sin venta, sin costo. Si al final no le hacemos falta, se lo decimos.</p>
+
+    <div class="cta-row" style="margin-top: 8px;">
+      <a href="https://wa.me/584122984632" target="_blank" rel="noopener" class="btn btn-solid" style="font-size: 1rem; padding: 16px 32px;">Agendar mi diagnóstico →</a>
+    </div>
+
+    <div class="cta-steps">
+      <div class="cta-step">
+        <span class="mono">Paso 01</span>
+        <h4>Responde 7 preguntas</h4>
+        <p>Un cuestionario breve por WhatsApp para entender su operación sin reuniones.</p>
+      </div>
+      <div class="cta-step">
+        <span class="mono">Paso 02</span>
+        <h4>Recibe su lectura</h4>
+        <p>Una foto ejecutiva de sus señales de desorden y las áreas de mayor riesgo.</p>
+      </div>
+      <div class="cta-step">
+        <span class="mono">Paso 03</span>
+        <h4>Decide si avanza</h4>
+        <p>Si hay match, agendamos la sesión de 15 minutos. Si no, se queda con su diagnóstico.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 CrGen · Architecture as a Service</span>
+  <div class="footer-links">
+    <a href="https://www.instagram.com/crgenve" target="_blank" rel="noopener">@crgenve</a>
+    <a href="https://wa.me/584122984632" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="mailto:christian.bracconi@sigosa.com">Contacto</a>
+  </div>
+</footer>
+
+<div id="float-dock">
+  <a href="https://wa.me/584122984632" id="wa-float" class="float-btn" target="_blank" rel="noopener" aria-label="WhatsApp CrGen">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+</div>
+
+<script>
+// Scroll reveal
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.symptom, .pillar, .data-card, .method-card, .impact-stat, .guarantee-card, .plan, .cta-panel').forEach(el => {
+  el.classList.add('sr'); io.observe(el);
+});
+
+// Symptom checker
+const symptoms = document.querySelectorAll('.symptom');
+const countLabel = document.getElementById('sym-count-label');
+const verdict = document.getElementById('sym-verdict');
+const cta = document.getElementById('sym-cta');
+
+function updateCount() {
+  const count = document.querySelectorAll('.symptom.checked').length;
+  if (count === 0) {
+    countLabel.textContent = 'Marque las señales que le suceden';
+    verdict.textContent = 'Al marcar 3 o más, tiene sentido que hablemos.';
+    cta.style.opacity = '0.4';
+    cta.style.pointerEvents = 'none';
+  } else if (count < 3) {
+    countLabel.textContent = count + ' de 5 señales marcadas';
+    verdict.textContent = 'Aún con 1 o 2 señales, vale la pena revisar. El desorden crece rápido.';
+    cta.style.opacity = '0.7';
+    cta.style.pointerEvents = 'auto';
+  } else {
+    countLabel.textContent = count + ' de 5 señales · definitivamente toca hablar';
+    verdict.textContent = 'Su operación ya está pagando el costo del desorden. Agende el diagnóstico.';
+    cta.style.opacity = '1';
+    cta.style.pointerEvents = 'auto';
+  }
+}
+symptoms.forEach(s => {
+  s.addEventListener('click', () => { s.classList.toggle('checked'); updateCount(); });
+});
+
+// Floating dock
+const dock = document.getElementById('float-dock');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 300) dock.classList.add('visible');
+  else dock.classList.remove('visible');
+});
+
+// Nav shrink
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  const s = window.scrollY > 60;
+  nav.style.maxWidth = s ? '800px' : '1000px';
+  nav.style.boxShadow = s
+    ? '0 8px 32px rgba(0,0,0,0.08), inset 0 1.5px 0 rgba(255,255,255,1)'
+    : 'inset 0 1.5px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06)';
+});
+</script>
+</body>
+</html>

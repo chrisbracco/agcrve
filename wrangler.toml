@@ -1,0 +1,12 @@
+name = "crgen-worker"
+main = "agencia-ia/worker.js"
+compatibility_date = "2024-03-20"
+
+[build]
+command = ""
+
+# Needed to tell Wrangler to treat JSON files as module imports
+[[rules]]
+type = "Data"
+globs = ["**/*.json"]
+fallbacks = []
