@@ -79,10 +79,10 @@ body {
 }
 
 /* Audit App Modal */
-#audit-modal { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; padding: 20px; }
+#audit-modal { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: flex-start; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; padding: 12vh 20px 20px; overflow-y: auto; }
 #audit-modal.active { opacity: 1; pointer-events: auto; }
-.audit-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
-.audit-container { position: relative; width: 100%; max-width: 720px; background: var(--white); border-radius: 28px; padding: 48px; box-shadow: 0 32px 80px rgba(0,0,0,0.2); overflow: hidden; transform: translateY(20px); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+.audit-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+.audit-container { position: relative; width: 100%; max-width: 720px; background: var(--white); border-radius: 28px; padding: 48px; box-shadow: 0 32px 80px rgba(0,0,0,0.2); overflow: hidden; transform: translateY(20px); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); margin: auto; }
 #audit-modal.active .audit-container { transform: translateY(0); }
 .audit-close { position: absolute; top: 24px; right: 28px; background: none; border: none; font-size: 1.5rem; color: var(--gray-lt); cursor: pointer; transition: color 0.2s; }
 .audit-close:hover { color: var(--black); }
@@ -113,7 +113,7 @@ body {
 .btn-next-audit:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.15); }
 .btn-wa { background: #25D366; color: white; border: none; }
 .btn-wa:hover { background: #128C7E; transform: scale(1.02); box-shadow: 0 8px 24px rgba(37,211,102,0.3); }
-@media (max-width: 600px) { .audit-container { padding: 32px 20px; border-radius: 20px; } }
+@media (max-width: 600px) { #audit-modal { padding: 20px 16px; align-items: flex-start; } .audit-container { padding: 32px 20px; border-radius: 20px; margin: 0 auto; } }
 
 /* Nav */
 #nav {
@@ -1064,28 +1064,39 @@ footer a:hover { color: var(--black); }
 
     <!-- Result -->
     <div class="audit-result">
-      <p class="mono" style="color: var(--gray-lt); letter-spacing: 0.1em; text-transform: uppercase;">Diagnóstico Preliminar</p>
-      <h3 style="font-size: 1.8rem; margin-top: 12px; color: var(--black);">El costo de operar sin arquitectura de procesos.</h3>
+      <p class="eyebrow" style="margin-bottom: 8px;">Análisis de Madurez Operativa</p>
+      <h3 style="font-size: 1.8rem; margin-top: 0; color: var(--black);">El cuello de botella está inmovilizando la operación.</h3>
       
-      <div style="display: flex; gap: 12px; margin: 24px 0; text-align: left; flex-wrap: wrap;">
-        <div style="flex:1; min-width: 200px; background: var(--off-white); padding: 20px; border-radius: 16px; border: 1px solid #fce8e6;">
-          <p style="font-size: 0.75rem; color: var(--accent-warn); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 6px;">SIN SISTEMA NATIVO</p>
-          <div style="font-size: 1.4rem; font-weight: 800; color: var(--black);" class="mono"><span id="res-hours">45</span>h / semanales</div>
-          <p style="font-size: 0.85rem; color: var(--gray); margin-top: 4px;">Gastadas en cruce manual y reportes fragmentados.</p>
+      <div style="background: var(--off-white); border-radius: 16px; padding: 20px; text-align: left; margin: 24px 0;">
+        <h4 style="font-size: 1.1rem; margin-bottom: 16px; border-bottom: 1px solid var(--gray-xlt); padding-bottom: 12px; font-weight: 700;">Disfunción Proyectada en el sector de <span id="res-sector-text" style="text-transform:capitalize;">su industria</span></h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+          <div>
+            <p style="font-size: 0.75rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; font-weight: 700;">Mermas de Tiempo Base</p>
+            <p style="font-size: 1.4rem; font-weight: 800; color: var(--accent-warn);"><span id="res-hours">45</span>h / semana</p>
+            <p style="font-size: 0.85rem; color: var(--gray-lt); margin-top: 4px;">Perdidas activamente en consolidación cruzada mediante <b id="res-tool">su herramienta</b>.</p>
+          </div>
+          <div>
+            <p style="font-size: 0.75rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; font-weight: 700;">Latencia de Decisión</p>
+            <p style="font-size: 1.4rem; font-weight: 800; color: var(--black);">Reacciones a <span id="res-delay">3-5</span> Días</p>
+            <p style="font-size: 0.85rem; color: var(--gray-lt); margin-top: 4px;">Incapacidad de pivotar estrategias o reaccionar a desviaciones de capital.</p>
+          </div>
         </div>
-        <div style="flex:1; min-width: 200px; background: #1d1d1f; padding: 20px; border-radius: 16px;">
-          <p style="font-size: 0.75rem; color: var(--gray-lt); font-weight: 700; letter-spacing: 0.05em; margin-bottom: 6px;">CON ARQUITECTURA</p>
-          <div style="font-size: 1.4rem; font-weight: 800; color: white;" class="mono">Instantáneo</div>
-          <p style="font-size: 0.85rem; color: var(--gray-lt); margin-top: 4px;">Lectura en tablero gerencial sin intervención humana.</p>
+        
+        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--gray-xlt);">
+          <p style="font-size: 0.75rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; font-weight: 700;">Proyección con Infraestructura CrGen</p>
+          <div style="display: flex; gap: 12px; align-items: center; background: #1d1d1f; padding: 16px; border-radius: 12px;">
+            <div style="width: 12px; height: 12px; background: #34C759; border-radius: 50%; flex-shrink: 0;"></div>
+            <div style="color: white; font-size: 0.95rem; font-weight: 500; line-height: 1.4;">
+              Latencia de la reacción reducida a <b>Cero (Tiempo Real)</b>. Flujos tabulados 100% automatizados.
+            </div>
+          </div>
         </div>
       </div>
-
-      <p style="color: var(--gray); font-size: 1.05rem; margin-bottom: 8px;">Su dependencia de flujos manuales con <b><span id="res-tool">su herramienta actual</span></b> está ahogando el ritmo operativo directivo y retrasando su capacidad de reacción real.</p>
       
-      <div class="audit-form">
-        <button onclick="sendAuditWhatsApp()" class="btn btn-solid btn-wa" style="width: 100%; justify-content: center; padding: 18px;">Agendar Intervención Operativa por WhatsApp →</button>
-        <p style="margin: 12px 0; font-size: 0.9rem; color: var(--gray-lt);">Este diagnóstico preliminar será evaluado directamente por nuestro nivel directivo para plantearle una ruta de escape viable.</p>
-      </div>
+      <p style="color: var(--gray); font-size: 1.05rem; margin-bottom: 24px; text-align: left;">Las decisiones corporativas en base a reportes manuales desfasados generan masivas oportunidades no capitalizadas (Lucro Cesante). Es imperativo unificar los <i>silos</i> de información.</p>
+      
+      <button onclick="sendAuditWhatsApp()" class="btn-next-audit" style="margin-top: 0; width: 100%; justify-content: center;">Exportar Análisis al Nivel Directivo CrGen →</button>
     </div>
 
   </div>
@@ -1165,7 +1176,12 @@ function finishAuditFinal() {
   auditData.hours = hInput;
   
   // Set UI data
+  let h = parseInt(auditData.hours) || 30;
+  let delay = h >= 40 ? "5-7" : h >= 20 ? "3-5" : "1-2";
+  
   document.getElementById('res-hours').textContent = auditData.hours;
+  document.getElementById('res-delay').textContent = delay;
+  document.getElementById('res-sector-text').textContent = auditData.sector || "Logística";
   document.getElementById('res-tool').textContent = auditData.tool ? auditData.tool : "herramientas fragmentadas";
 
   document.querySelector('.step-5').classList.remove('active');
