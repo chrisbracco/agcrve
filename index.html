@@ -472,16 +472,21 @@ p { line-height: 1.65; color: var(--ink); letter-spacing: -0.005em; }
 
 /* Plans */
 .plan-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
-  align-items: stretch;
+  display: flex; flex-direction: row; gap: 16px; align-items: stretch;
+  overflow-x: auto; padding-bottom: 40px; scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; scroll-padding: 16px;
 }
-@media (max-width: 980px) { .plan-grid { grid-template-columns: 1fr; } }
+.plan-grid::-webkit-scrollbar { height: 8px; }
+.plan-grid::-webkit-scrollbar-track { background: var(--off-white); border-radius: 4px; }
+.plan-grid::-webkit-scrollbar-thumb { background: var(--gray-xlt); border-radius: 4px; }
 .plan {
+  min-width: 320px; max-width: 360px; flex: 0 0 auto; scroll-snap-align: start;
   padding: 40px 34px; border-radius: 26px;
   display: flex; flex-direction: column; gap: 18px; position: relative; min-height: 540px;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
 }
-.plan-featured { transform: translateY(-12px); box-shadow: 0 24px 60px rgba(0,0,0,0.10), inset 0 1.5px 0 rgba(255,255,255,1); }
-@media (max-width: 980px) { .plan-featured { transform: none; } }
+.plan:hover { transform: translateY(-8px); box-shadow: 0 24px 60px rgba(0,0,0,0.1); }
+.plan-featured { box-shadow: 0 12px 40px rgba(0,0,0,0.06), inset 0 1.5px 0 rgba(255,255,255,1); }
 .plan-badge {
   position: absolute; top: 18px; right: 18px;
   font-family: "JetBrains Mono", monospace; font-size: 0.62rem;
@@ -613,13 +618,12 @@ footer a:hover { color: var(--black); }
     <span class="hero-badge crystal-2"><span class="badge-dot"></span>Architecture as a Service (AaaS)</span>
 
     <h1>
-      Su infraestructura de datos<br>
-      <span class="muted">es un caos.</span><br>
-      La IA la hará colapsar.
+      Cada reporte manual le cuesta<br>
+      <span class="muted">dinero que no ve.</span>
     </h1>
 
     <p class="hero-sub">
-      Organizamos el desorden operativo intocable de su empresa integrándolo fluidamente a la infraestructura que ya posee. Transformamos años de silos fragmentados y "Deuda Digital" en un flujo corporativo centralizado, logrando que sus procesos operen solos bajo una misma directiva.
+      Automatizamos sus procesos sin cambiar los sistemas que ya usa. Organizamos el desorden de herramientas de su empresa y transformamos esos silos fragmentados en un solo flujo corporativo rentable, donde el negocio opera bajo una sola directiva.
     </p>
 
     <div class="cta-row">
@@ -1023,9 +1027,9 @@ footer a:hover { color: var(--black); }
 <!-- PLANES -->
 <section id="planes" class="section-wrap">
   <div class="section-header">
-    <p class="eyebrow">Inversión</p>
-    <h2>Tres formas de trabajar<br>con CrGen.</h2>
-    <p class="lead">Cada plan se factura por horas de asesoría y consultoría aplicadas a su operación. Sin suscripciones ocultas, sin licencias forzadas, sin compromiso anual. Si no aportamos valor, no continuamos.</p>
+    <p class="eyebrow">Formas de trabajar</p>
+    <h2>Conectamos su estructura.<br>Aceleramos su capital.</h2>
+    <p class="lead">Las mejores arquitecturas se implementan sin ataduras. Sin suscripciones ocultas, sin licencias forzadas, sin compromiso ciego. Si no prevemos un ahorro radical, no le vendemos tecnología.</p>
   </div>
 
   <div id="sticky-timer-banner" style="background: var(--accent-warn); color: white; text-align: center; padding: 14px 20px; border-radius: 12px; margin-bottom: 40px; font-size: 0.92rem; font-weight: 600; box-shadow: 0 8px 24px rgba(196, 69, 54, 0.2);">
@@ -1033,40 +1037,57 @@ footer a:hover { color: var(--black); }
   </div>
 
   <div class="plan-grid">
+    <!-- FICHA 1: DIAGNÓSTICO GRATUITO -->
     <div class="plan crystal-2" style="display:flex; flex-direction:column; height: 100%;">
-      <span class="plan-tag" style="font-size: 0.95rem; font-weight: 800; color: var(--black); line-height: 1.3;">NIVEL I · Diagnóstico de Deuda Digital</span>
+      <span class="plan-tag" style="font-size: 0.95rem; font-weight: 800; color: var(--black); line-height: 1.3;">NIVEL 0 · INICIO GRATIS</span>
       <div style="margin: 20px 0;">
-        <span class="plan-from" style="display:block; margin-bottom:4px; font-size:0.85rem;">Tarifa por hora: <b>$150 USD/h</b> &nbsp;|&nbsp; <b>10 horas</b></span>
+        <span class="plan-from" style="display:block; margin-bottom:4px; font-size:0.85rem;">Libre de costo (Solo una vez)</span>
+        <div class="plan-price timer-price" style="margin-top: 12px;">
+          <span style="font-size:2.4rem; font-weight:800; color:var(--black); line-height:1;">Gratis</span>
+        </div>
+      </div>
+      <ul class="plan-list" style="flex-grow: 1;">
+        <li>5 preguntas clave de descubrimiento</li>
+        <li>Análisis de fugas de capital actual</li>
+        <li>Ruta de eficiencia recomendada</li>
+        <li>Identificación de cuellos de botella</li>
+      </ul>
+      <div class="plan-hours" style="margin: 16px 0 12px;"><span class="mono">Sesión estratégica en vivo</span></div>
+      <button onclick="openLeadModal('NIVEL 0 (Gratis)')" class="btn btn-ghost plan-cta" style="width: 100%; justify-content: center;">Solicitar Evaluación →</button>
+    </div>
+
+    <!-- FICHA 2: NIVEL I -->
+    <div class="plan crystal-2" style="display:flex; flex-direction:column; height: 100%;">
+      <span class="plan-tag" style="font-size: 0.95rem; font-weight: 800; color: var(--black); line-height: 1.3;">NIVEL I · DIAGNÓSTICO PROFUNDO</span>
+      <div style="margin: 20px 0;">
         <div class="plan-price timer-price" style="margin-top: 12px;">
           <b>$200</b><span class="plan-unit">USD</span>
           <span style="font-size:0.85rem; color:#34C759; margin-left:8px; font-weight:800;">(-25% HOY)</span>
         </div>
         <div class="offer-expired" style="display:none; font-size: 0.85rem; color: var(--gray); background: rgba(0,0,0,0.04); padding: 8px 12px; border-radius: 8px;">
-          Esta oferta ha expirado. Contáctenos para conocer condiciones actuales.
+          Esta oferta ha expirado. Contáctenos.
         </div>
       </div>
       <ul class="plan-list" style="flex-grow: 1;">
         <li>Mapa de Arqueología de Datos</li>
         <li>Identificación de fugas operativas críticas</li>
         <li>Estructuración lógica organizacional</li>
-        <li>Business Case de Retorno de Inversión</li>
-        <li>Framework de Escaneos Estructurales</li>
       </ul>
       <div class="plan-hours" style="margin: 16px 0 12px;"><span class="mono">Entrega en 5 días hábiles</span></div>
-      <button onclick="openLeadModal('NIVEL I')" class="btn btn-ghost plan-cta" style="width: 100%; justify-content: center;">Solicitar Diagnóstico →</button>
+      <button onclick="openLeadModal('NIVEL I ($200)')" class="btn btn-ghost plan-cta" style="width: 100%; justify-content: center;">Solicitar Mapeo →</button>
     </div>
 
+    <!-- FICHA 3: NIVEL II -->
     <div class="plan plan-featured crystal-3" style="display:flex; flex-direction:column; height: 100%;">
       <span class="plan-badge">AaaS Premium</span>
-      <span class="plan-tag" style="font-size: 0.95rem; font-weight: 800; color: var(--black); line-height: 1.3;">NIVEL II · Arquitectura Atlas Documental</span>
+      <span class="plan-tag" style="font-size: 0.95rem; font-weight: 800; color: var(--black); line-height: 1.3;">NIVEL II · ARQUITECTURA ATLAS DOCUMENTAL</span>
       <div style="margin: 20px 0;">
-        <span class="plan-from" style="display:block; margin-bottom:4px; font-size:0.85rem;">Tarifa por hora: <b>$150 USD/h</b> &nbsp;|&nbsp; <b>40 horas</b></span>
         <div class="plan-price timer-price" style="margin-top: 12px;">
           <b>$1.500</b><span class="plan-unit">USD</span>
           <span style="font-size:0.85rem; color:#34C759; margin-left:8px; font-weight:800;">(-25% HOY)</span>
         </div>
         <div class="offer-expired" style="display:none; font-size: 0.85rem; color: var(--gray); background: rgba(0,0,0,0.04); padding: 8px 12px; border-radius: 8px;">
-          Esta oferta ha expirado. Contáctenos para conocer condiciones actuales.
+          Esta oferta ha expirado. Contáctenos.
         </div>
       </div>
       <ul class="plan-list" style="flex-grow: 1;">
@@ -1077,13 +1098,14 @@ footer a:hover { color: var(--black); }
         <li>Soporte de estabilización por 30 días</li>
       </ul>
       <div class="plan-hours" style="margin: 16px 0 12px;"><span class="mono">Despliegue en 3 a 5 semanas</span></div>
-      <button onclick="openLeadModal('NIVEL II')" class="btn btn-solid plan-cta" style="width: 100%; justify-content: center;">Iniciar Implementación →</button>
+      <button onclick="openLeadModal('NIVEL II ($1.500)')" class="btn btn-solid plan-cta" style="width: 100%; justify-content: center;">Iniciar Implementación →</button>
     </div>
 
+    <!-- FICHA 4: NIVEL III -->
     <div class="plan crystal-2" style="display:flex; flex-direction:column; height: 100%;">
-      <span class="plan-tag" style="font-size: 0.95rem; font-weight: 800; color: var(--black); line-height: 1.3;">NIVEL III · Enterprise a Medida</span>
+      <span class="plan-tag" style="font-size: 0.95rem; font-weight: 800; color: var(--black); line-height: 1.3;">NIVEL III · ENTERPRISE A MEDIDA</span>
       <div style="margin: 20px 0;">
-        <p style="font-size: 0.95rem; color: var(--gray); line-height: 1.6;">Operaciones de infraestructura corporativa profunda orientada a ecosistemas de +500 empleados o arquitecturas legacy fragmentadas.</p>
+        <p style="font-size: 0.95rem; color: var(--gray); line-height: 1.6; margin-top: 12px;">Operaciones de infraestructura corporativa profunda orientada a ecosistemas de +500 empleados o arquitecturas legacy pre-existentes.</p>
       </div>
       <ul class="plan-list" style="flex-grow: 1;">
         <li>Todo lo del Nivel II a escala corporativa</li>
@@ -1092,13 +1114,13 @@ footer a:hover { color: var(--black); }
         <li>Acceso prioritario al equipo fundador</li>
       </ul>
       <div class="plan-hours" style="margin: 16px 0 12px;"><span class="mono">Despliegue Dedicado</span></div>
-      <button onclick="openLeadModal('NIVEL III')" class="btn btn-ghost plan-cta" style="width: 100%; justify-content: center;">Solicitar Evaluación Especializada →</button>
+      <button onclick="openLeadModal('NIVEL III (Enterprise)')" class="btn btn-ghost plan-cta" style="width: 100%; justify-content: center;">Solicitar Evaluación Especializada →</button>
     </div>
   </div>
 
   <div class="crystal-2" style="padding: 36px 32px; border-radius: 20px; text-align: center; margin-top: 56px;">
-    <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 12px; color: var(--black);">🎯 Nuestro Compromiso Operacional</h3>
-    <p style="color: var(--gray); font-size: 0.95rem; line-height: 1.6; max-width: 720px; margin: 0 auto;">Sabemos que el desorden cuesta dinero diario y decisiones erradas. Si durante el Diagnóstico de Deuda Digital no encontramos vías directas, rentables y contundentes para automatizar su flujo actual de trabajo, le entregaremos la auditoría y cerramos el caso sin costo adicional. Transparencia total, mitigación de riesgo absoluta.</p>
+    <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 12px; color: var(--black);">🎯 Política de Transparencia Operativa</h3>
+    <p style="color: var(--gray); font-size: 0.95rem; line-height: 1.6; max-width: 720px; margin: 0 auto;">No vendemos humo. Si durante su Evaluación Inicial notamos que su operación no requiere nuestra arquitectura, o que simplemente no podemos aportarle un ahorro gigantesco de tiempo y capital, le diremos la verdad y le orientaremos sin costo, de forma transparente y sin forzar un contrato. Si no le podemos salvar dinero, no nos paga un centavo.</p>
   </div>
 
   <div style="margin-top: 40px; padding-top: 40px; border-top: 1px solid var(--rule);">
