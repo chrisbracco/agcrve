@@ -7,6 +7,41 @@
 <title>CrGen</title>
 <link rel="icon" href="assets/Logo.png" type="image/png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- 3. Tracking HTML Snippets (Meta, GA4, Clarity) -->
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '[META_PIXEL_ID]');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=[META_PIXEL_ID]&ev=PageView&noscript=1"/></noscript>
+
+<!-- Google Analytics 4 (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=[GA4_MEASUREMENT_ID]"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '[GA4_MEASUREMENT_ID]');
+</script>
+
+<!-- Microsoft Clarity (Heatmaps/Sessions) -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "[CLARITY_ID]");
+</script>
+
 <template id="__bundler_thumbnail">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
     <defs>
@@ -563,7 +598,7 @@ footer a:hover { color: var(--black); }
     <li><a href="#pilares">Los 4 pilares</a></li>
     <li><a href="#metodo">Cómo trabajamos</a></li>
     <li><a href="#planes">Planes</a></li>
-    <li><a href="#lead" class="nav-pill">Diagnóstico →</a></li>
+    <li><a href="https://wa.me/584122984632?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20CrGen" target="_blank" rel="noopener" class="nav-pill track-whatsapp">Escribir por WhatsApp →</a></li>
   </ul>
 </nav>
 
@@ -583,7 +618,7 @@ footer a:hover { color: var(--black); }
     </p>
 
     <div class="cta-row">
-      <a href="#senales" class="btn btn-solid">Auditar mi operación →</a>
+      <a href="https://wa.me/584122984632?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20CrGen" class="btn btn-solid track-whatsapp" target="_blank" rel="noopener">Escribir por WhatsApp →</a>
       <a href="#pilares" class="btn btn-ghost">Ver Arquitectura</a>
     </div>
 
@@ -593,7 +628,7 @@ footer a:hover { color: var(--black); }
         <strong>Su operación está perdiendo dinero sin notarlo.</strong>
         <span>Descubra si tiene "Deuda Digital" severa recorriendo estos síntomas.</span>
       </div>
-      <a href="#senales" class="btn btn-solid">Auditar operación →</a>
+      <a href="https://wa.me/584122984632?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20CrGen" target="_blank" rel="noopener" class="btn btn-solid track-whatsapp">Escribir por WhatsApp →</a>
     </div>
   </div>
 </section>
@@ -997,65 +1032,106 @@ footer a:hover { color: var(--black); }
 
   <div class="plan-grid">
     <div class="plan crystal-2">
-      <span class="plan-tag">Nivel I · Diagnóstico</span>
-      <h3>Auditoría de Deuda Digital</h3>
-      <p class="plan-sub">Diagnóstico profundo de fugas operativas y mapa de caos documental inicial.</p>
-      <div class="plan-price">
-        <span class="plan-from">Desde</span>
-        <b>$3.000</b>
-        <span class="plan-unit">USD</span>
+      <span class="plan-tag" style="background:var(--black); color:var(--white);">NIVEL I · Diagnóstico de Deuda Digital</span>
+      <div style="margin-bottom: 24px; margin-top: 24px;">
+        <p style="font-size:0.92rem; color:var(--gray); margin-bottom:4px;">Tarifa por hora de consultoría: <b style="color:var(--black);">$150 USD/h</b></p>
+        <p style="font-size:0.92rem; color:var(--gray);">Total de horas incluidas: <b style="color:var(--black);">10 horas</b></p>
+        <hr style="border:none; border-top:1px solid var(--rule); margin:16px 0;">
+        <p style="font-size:0.85rem; color:var(--gray-lt);">Valor de mercado: $1,500 USD</p>
+        <p class="timer-strike" style="font-size:0.9rem; color:var(--gray); text-decoration: line-through; margin-bottom:8px;">Precio regular: $1,500 USD</p>
+        <div class="timer-price" style="margin-bottom: 16px;">
+          <span style="color:#25D366; font-weight:800; font-size:1.15rem;">✅ Precio CrGen HOY: $750 USD</span>
+        </div>
+        <div class="offer-timer" style="font-size: 0.85rem; color: #c44536; font-weight: 600; background: rgba(196, 69, 54, 0.08); padding: 8px 12px; border-radius: 8px;">
+          ⏳ Esta oferta vence en: <span class="countdown-clock">--:--:--</span>
+        </div>
+        <div class="offer-expired" style="display:none; font-size: 0.85rem; color: var(--gray); background: rgba(0,0,0,0.04); padding: 8px 12px; border-radius: 8px;">
+          Esta oferta ha expirado. Contáctenos para conocer condiciones actuales.
+        </div>
       </div>
-      <div class="plan-hours"><span class="mono">20 horas de consultoría clínica</span><span>Entrega en 7 días</span></div>
+      <div class="plan-hours" style="margin-bottom: 16px;"><span class="mono">Entrega en 5 días hábiles</span></div>
+      <b style="font-size:0.9rem; display:block; margin-bottom: 12px; color:var(--black);">Incluye:</b>
       <ul class="plan-list">
         <li>Mapa de Arqueología de Datos</li>
-        <li>Identificación de 5 Síntomas Tóxicos</li>
+        <li>Identificación de fugas operativas críticas</li>
         <li>Business Case de Retorno de Inversión</li>
         <li>Hoja de ruta para el Atlas Documental</li>
       </ul>
-      <a href="https://wa.me/584122984632?text=Quiero%20solicitar%20el%20Diagn%C3%B3stico%20de%20Deuda%20Digital" target="_blank" rel="noopener" class="btn btn-ghost plan-cta">Solicitar Diagnóstico</a>
+      <a href="https://wa.me/584122984632?text=Quiero%20el%20Diagn%C3%B3stico%20de%20Deuda%20Digital%20al%2050%25" target="_blank" rel="noopener" class="btn btn-ghost plan-cta track-whatsapp">Solicitar por WhatsApp →</a>
     </div>
 
     <div class="plan plan-featured crystal-3">
       <span class="plan-badge">AaaS Premium</span>
-      <span class="plan-tag">Nivel II · Implementación</span>
-      <h3>Arquitectura Atlas Documental</h3>
-      <p class="plan-sub">Construcción de la infraestructura semántica y saneamiento del caos histórico.</p>
-      <div class="plan-price">
-        <span class="plan-from">Desde</span>
-        <b>$7.500</b>
-        <span class="plan-unit">USD</span>
+      <span class="plan-tag" style="background:var(--black); color:var(--white);">NIVEL II · Arquitectura Atlas Documental</span>
+      <div style="margin-bottom: 24px; margin-top: 24px;">
+        <p style="font-size:0.92rem; color:var(--gray); margin-bottom:4px;">Tarifa por hora de consultoría: <b style="color:var(--black);">$150 USD/h</b></p>
+        <p style="font-size:0.92rem; color:var(--gray);">Total de horas incluidas: <b style="color:var(--black);">40 horas</b></p>
+        <hr style="border:none; border-top:1px solid var(--rule); margin:16px 0;">
+        <p style="font-size:0.85rem; color:var(--gray-lt);">Valor de mercado: $6,000 USD</p>
+        <p class="timer-strike" style="font-size:0.9rem; color:var(--gray); text-decoration: line-through; margin-bottom:8px;">Precio regular: $6,000 USD</p>
+        <div class="timer-price" style="margin-bottom: 16px;">
+          <span style="color:#25D366; font-weight:800; font-size:1.15rem;">✅ Precio CrGen HOY: $3,000 USD</span>
+        </div>
+        <div class="offer-timer" style="font-size: 0.85rem; color: #c44536; font-weight: 600; background: rgba(196, 69, 54, 0.08); padding: 8px 12px; border-radius: 8px;">
+          ⏳ Esta oferta vence en: <span class="countdown-clock">--:--:--</span>
+        </div>
+        <div class="offer-expired" style="display:none; font-size: 0.85rem; color: var(--gray); background: rgba(0,0,0,0.04); padding: 8px 12px; border-radius: 8px;">
+          Esta oferta ha expirado. Contáctenos para conocer condiciones actuales.
+        </div>
       </div>
-      <div class="plan-hours"><span class="mono">60 horas de arquitectura activa</span><span>Despliegue en 4-6 semanas</span></div>
+      <div class="plan-hours" style="margin-bottom: 16px;"><span class="mono">Despliegue en 3 a 5 semanas</span></div>
+      <b style="font-size:0.9rem; display:block; margin-bottom: 12px; color:var(--black);">Incluye:</b>
       <ul class="plan-list">
-        <li>Mapeo y Construcción de Flujos</li>
+        <li>Todo lo del Nivel I</li>
+        <li>Mapeo y construcción de flujos operativos</li>
         <li>Integración nativa con su ERP actual</li>
         <li>Estructuración lógica organizacional</li>
         <li>Handoff de Activos de Inteligencia</li>
-        <li>Soporte de estabilización (30 días)</li>
+        <li>Soporte de estabilización por 30 días</li>
       </ul>
-      <a href="https://wa.me/584122984632?text=Quiero%20implementar%20la%20Arquitectura%20Atlas%20Documental" target="_blank" rel="noopener" class="btn btn-solid plan-cta">Iniciar Transformación</a>
+      <a href="https://wa.me/584122984632?text=Quiero%20la%20Arquitectura%20Atlas%20Documental%20al%2050%25" target="_blank" rel="noopener" class="btn btn-solid plan-cta track-whatsapp">Iniciar por WhatsApp →</a>
     </div>
 
     <div class="plan crystal-2">
-      <span class="plan-tag">Enterprise AaaS</span>
-      <h3>Arquitectura a Medida</h3>
-      <p class="plan-sub">Para operaciones volumétricas que requieren infraestructura dedicada e integración total.</p>
-      <div class="plan-price" style="margin-bottom: 24px;">
-        <span class="plan-from">Inversión</span>
-        <b>Sujeta a Volumen</b>
+      <span class="plan-tag" style="background:var(--black); color:var(--white);">NIVEL III · Enterprise a Medida</span>
+      <div style="margin-bottom: 24px; margin-top: 24px;">
+        <p style="font-size:0.92rem; color:var(--gray); margin-bottom:4px;">Tarifa por hora de consultoría: <b style="color:var(--black);">$150 USD/h</b></p>
+        <p style="font-size:0.92rem; color:var(--gray);">Horas: <b style="color:var(--black);">según volumen y alcance</b></p>
+        <hr style="border:none; border-top:1px solid var(--rule); margin:16px 0;">
+        <p class="timer-strike" style="font-size:0.9rem; color:var(--gray); text-decoration: line-through; margin-bottom:8px;">Precio regular: según diagnóstico</p>
+        <div class="timer-price" style="margin-bottom: 16px;">
+          <span style="color:#25D366; font-weight:800; font-size:1.15rem;">✅ Precio CrGen HOY: 50% aplicable</span>
+        </div>
+        <div class="offer-timer" style="font-size: 0.85rem; color: #c44536; font-weight: 600; background: rgba(196, 69, 54, 0.08); padding: 8px 12px; border-radius: 8px;">
+          ⏳ Esta oferta vence en: <span class="countdown-clock">--:--:--</span>
+        </div>
+        <div class="offer-expired" style="display:none; font-size: 0.85rem; color: var(--gray); background: rgba(0,0,0,0.04); padding: 8px 12px; border-radius: 8px;">
+          Esta oferta ha expirado. Contáctenos para conocer condiciones actuales.
+        </div>
       </div>
-      <div class="plan-hours"><span class="mono">Despliegue Dedicado</span><span>Soporte 24/7 y SLA</span></div>
+      <div class="plan-hours" style="margin-bottom: 16px;"><span class="mono">Soporte 24/7 · SLA garantizado</span></div>
+      <b style="font-size:0.9rem; display:block; margin-bottom: 12px; color:var(--black);">Incluye:</b>
       <ul class="plan-list">
         <li>Todo lo del Nivel II a escala corporativa</li>
         <li>Despliegue propietario en sus propios servidores</li>
         <li>Integración transversal profunda entre sistemas</li>
         <li>Acceso prioritario al equipo fundador</li>
       </ul>
-      <a href="https://wa.me/584122984632?text=Quiero%20solicitar%20evaluaci%C3%B3n%20Enterprise" target="_blank" rel="noopener" class="btn btn-ghost plan-cta">Solicitar evaluación</a>
+      <a href="https://wa.me/584122984632?text=Quiero%20una%20evaluaci%C3%B3n%20Enterprise%20con%20CrGen" target="_blank" rel="noopener" class="btn btn-ghost plan-cta track-whatsapp">Solicitar evaluación →</a>
     </div>
   </div>
 
-  <p class="plan-foot">Todos los planes se facturan contra horas trabajadas y entregables firmados. Cotizaciones finales se ajustan al alcance del diagnóstico. Se trabaja con NDA y confidencialidad desde la primera llamada.</p>
+  <div style="background: rgba(0,0,0,0.03); padding: 32px; border-radius: 20px; text-align: center; margin-top: 56px; border: 1px solid var(--rule);">
+    <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 12px;">🔒 Garantía de Riesgo Cero</h3>
+    <p style="color: var(--gray); font-size: 0.95rem; line-height: 1.6; max-width: 680px; margin: 0 auto;">Si al finalizar el Diagnóstico no identificamos al menos <strong>3 fugas operativas cuantificables</strong> en su empresa, le devolvemos el <strong>100% de su inversión</strong>. Sin preguntas.</p>
+  </div>
+
+  <div style="margin-top: 40px; padding-top: 40px; border-top: 1px solid var(--rule);">
+    <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 16px; color: var(--black);">¿Qué incluye y qué no incluye el precio?</h4>
+    <p style="color: var(--gray); font-size: 0.9rem; line-height: 1.6; max-width: 800px; margin-bottom: 12px;">El precio de cada plan cubre exclusivamente las horas de consultoría, arquitectura y acompañamiento del equipo CrGen.</p>
+    <p style="color: var(--gray); font-size: 0.9rem; line-height: 1.6; max-width: 800px; margin-bottom: 12px;">Los costos de herramientas externas como licencias de software, APIs, plataformas cloud, ERPs, almacenamiento o cualquier servicio de terceros necesario para la implementación <strong>se presupuestan por separado y de forma transparente</strong>, una vez realizado el diagnóstico inicial.</p>
+    <p style="color: var(--gray); font-size: 0.9rem; line-height: 1.6; max-width: 800px; font-weight: 600;">Nunca se cobra un servicio externo sin su aprobación previa.</p>
+  </div>
 </section>
 
 <!-- LEAD MAGNET -->
@@ -1066,7 +1142,7 @@ footer a:hover { color: var(--black); }
     <p class="lead" style="max-width: 680px;">Someteremos la actualidad de su negocio a una Auditoría de Procesos. Es una instancia constructiva diseñada para encontrar las brechas o "fugas" de su engranaje donde recuperar tiempo será sumamente rentable.</p>
 
     <div class="cta-row" style="margin-top: 8px;">
-      <a href="#" onclick="openAuditApp(event)" class="btn btn-solid" style="font-size: 1rem; padding: 16px 32px;">Iniciar Auditoría Gratuita →</a>
+      <a href="https://wa.me/584122984632?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20CrGen" target="_blank" rel="noopener" class="btn btn-solid track-whatsapp" style="font-size: 1rem; padding: 16px 32px;">Escribir por WhatsApp →</a>
     </div>
 
     <div class="cta-steps">
@@ -1242,13 +1318,16 @@ footer a:hover { color: var(--black); }
   <span>© 2026 CrGen · Architecture as a Service</span>
   <div class="footer-links">
     <a href="https://www.instagram.com/crgenve" target="_blank" rel="noopener">@crgenve</a>
-    <a href="https://wa.me/584122984632" target="_blank" rel="noopener">WhatsApp</a>
-    <a href="mailto:christian.bracconi@sigosa.com">Contacto</a>
+    <a href="https://wa.me/584122984632?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20CrGen" target="_blank" rel="noopener" class="track-whatsapp">WhatsApp</a>
   </div>
 </footer>
 
+<div id="sticky-timer-banner" style="display:none; position: fixed; top: 0; left: 0; width: 100%; background: #c44536; color: white; text-align: center; padding: 12px 20px; z-index: 1000; font-size: 0.9rem; font-weight: 600; box-shadow: 0 4px 12px rgba(196, 69, 54, 0.4);">
+  ⏳ Oferta válida por: <span class="countdown-clock" style="font-family: 'JetBrains Mono', monospace; background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2);">--:--:--</span>
+</div>
+
 <div id="float-dock">
-  <a href="https://wa.me/584122984632" id="wa-float" class="float-btn" target="_blank" rel="noopener" aria-label="WhatsApp CrGen">
+  <a href="https://wa.me/584122984632?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20CrGen" id="wa-float" class="float-btn track-whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp CrGen">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
   </a>
 </div>
@@ -1415,6 +1494,58 @@ window.addEventListener('scroll', () => {
     ? '0 8px 32px rgba(0,0,0,0.08), inset 0 1.5px 0 rgba(255,255,255,1)'
     : 'inset 0 1.5px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06)';
 });
+
+// Oferta Timer (48 horas persistente)
+const DURATION = 48 * 60 * 60 * 1000;
+let endTime = localStorage.getItem('crgen_offer_end');
+
+if (!endTime) {
+  endTime = new Date().getTime() + DURATION;
+  localStorage.setItem('crgen_offer_end', endTime);
+}
+
+function updateTimer() {
+  const now = new Date().getTime();
+  const diff = endTime - now;
+  
+  if (diff <= 0) {
+    document.querySelectorAll('.countdown-clock').forEach(el => el.textContent = "00:00:00");
+    document.querySelectorAll('.timer-price, .offer-timer, .timer-strike').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.offer-expired').forEach(el => el.style.display = 'block');
+    document.getElementById('sticky-timer-banner').style.display = 'none';
+    return;
+  }
+  
+  const h = Math.floor(diff / (1000 * 60 * 60));
+  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const s = Math.floor((diff % (1000 * 60)) / 1000);
+  
+  const formatted = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  
+  document.querySelectorAll('.countdown-clock').forEach(el => el.textContent = formatted);
+  document.getElementById('sticky-timer-banner').style.display = 'block';
+}
+setInterval(updateTimer, 1000);
+updateTimer();
+
+// Track Whatsapp y Scroll
+document.querySelectorAll('.track-whatsapp').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if(typeof fbq === 'function') fbq('track', 'Lead');
+    if(typeof gtag === 'function') gtag('event', 'click_whatsapp', { 'event_category': 'Engagement' });
+  });
+});
+
+const priceSection = document.getElementById('planes');
+if(priceSection) {
+  const ioPrice = new IntersectionObserver((entries) => {
+    if(entries[0].isIntersecting) {
+      if(typeof fbq === 'function') fbq('track', 'ViewContent');
+      ioPrice.disconnect();
+    }
+  });
+  ioPrice.observe(priceSection);
+}
 </script>
 </body>
 </html>
