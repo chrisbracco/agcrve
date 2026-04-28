@@ -594,7 +594,11 @@ footer {
 }
 footer a { color: var(--gray); text-decoration: none; }
 footer a:hover { color: var(--black); }
-.footer-links { display: flex; gap: 24px; }
+.footer-links { display: flex; gap: 24px; align-items: center; }
+.visit-counter { display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border:1px solid var(--rule); border-radius:999px; font-size:0.74rem; font-weight:600; color:var(--gray); background:rgba(255,255,255,0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); letter-spacing:0.04em; text-transform:uppercase; }
+.visit-counter .vc-dot { width:7px; height:7px; border-radius:50%; background:#34C759; box-shadow:0 0 0 0 rgba(52,199,89,0.55); animation: vcPulse 2.2s infinite; }
+.visit-counter .vc-num { font-family:'JetBrains Mono', ui-monospace, monospace; color:var(--black); font-weight:700; letter-spacing:0.02em; text-transform:none; }
+@keyframes vcPulse { 0%{box-shadow:0 0 0 0 rgba(52,199,89,0.55);} 70%{box-shadow:0 0 0 9px rgba(52,199,89,0);} 100%{box-shadow:0 0 0 0 rgba(52,199,89,0);} }
 
 /* Scroll reveal */
 .sr { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s ease; }
@@ -1188,7 +1192,6 @@ footer a:hover { color: var(--black); }
         <div><label style="font-size:0.75rem; font-weight:700; color:var(--gray);">APELLIDO</label><input type="text" id="lm-apellido" placeholder="Pérez" style="width:100%; padding:12px; border-radius:12px; border:1px solid var(--rule); margin-top:4px; font-family:inherit; background:#fafafa;"></div>
       </div>
       <div><label style="font-size:0.75rem; font-weight:700; color:var(--gray);">TELÉFONO / WHATSAPP</label><input type="tel" id="lm-telefono" placeholder="+58 412 1234567" style="width:100%; padding:12px; border-radius:12px; border:1px solid var(--rule); margin-top:4px; font-family:inherit; background:#fafafa;"></div>
-      <div><label style="font-size:0.75rem; font-weight:700; color:var(--gray);">CORREO ELECTRÓNICO</label><input type="email" id="lm-correo" placeholder="correo@empresa.com" style="width:100%; padding:12px; border-radius:12px; border:1px solid var(--rule); margin-top:4px; font-family:inherit; background:#fafafa;"></div>
       
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
         <div><label style="font-size:0.75rem; font-weight:700; color:var(--gray);">NOMBRE DE LA EMPRESA</label><input type="text" id="lm-empresa" placeholder="Empresa C.A." style="width:100%; padding:12px; border-radius:12px; border:1px solid var(--rule); margin-top:4px; font-family:inherit; background:#fafafa;"></div>
@@ -1217,7 +1220,7 @@ footer a:hover { color: var(--black); }
       </div>
       
       <button onclick="submitLeadModal()" id="lm-submit" class="btn btn-solid" style="width:100%; justify-content:center; margin-top:16px; font-size:1.05rem; padding:16px;">Registrar Solicitud →</button>
-      <p id="lm-feedback" style="display:none; color:#34C759; font-weight:700; text-align:center; font-size:0.9rem; margin-top:10px;">¡Datos registrados con éxito! Revisaremos la información para contactarle por correo.</p>
+      <p id="lm-feedback" style="display:none; color:#34C759; font-weight:700; text-align:center; font-size:0.9rem; margin-top:10px;">¡Datos registrados con éxito! Le contactamos por WhatsApp en breve.</p>
     </div>
   </div>
 </div>
@@ -1227,6 +1230,11 @@ footer a:hover { color: var(--black); }
 <footer>
   <span>© 2026 CrGen · Architecture as a Service</span>
   <div class="footer-links">
+    <div class="visit-counter" aria-live="polite" title="Visitas registradas al sitio">
+      <span class="vc-dot" aria-hidden="true"></span>
+      <span>Visitas</span>
+      <span class="vc-num" id="visit-count">—</span>
+    </div>
     <a href="https://www.instagram.com/crgenve" target="_blank" rel="noopener">@crgenve</a>
     <a href="https://wa.me/584122984632?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20CrGen" target="_blank" rel="noopener" class="track-whatsapp">WhatsApp</a>
   </div>
@@ -1265,7 +1273,6 @@ function submitLeadModal() {
     nombre: document.getElementById('lm-nombre').value.trim(),
     apellido: document.getElementById('lm-apellido').value.trim(),
     telefono: document.getElementById('lm-telefono').value.trim(),
-    correo: document.getElementById('lm-correo').value.trim(),
     empresa: document.getElementById('lm-empresa').value.trim(),
     empleados: document.getElementById('lm-empleados').value,
     sector: document.getElementById('lm-sector').value.trim(),
@@ -1284,7 +1291,7 @@ function submitLeadModal() {
     // Preparar mensaje para WhatsApp
     const systext = sistemas.length > 0 ? sistemas.join(', ') : 'No especificado';
     const plan = document.getElementById('lead-plan-name').textContent;
-    const textMsg = `Hola CrGen, mi nombre es ${data.nombre} ${data.apellido}.%0A%0AEstoy solicitando: *${plan}*.%0A%0A*Mis Datos:*%0A- Empresa: ${data.empresa || 'N/A'} (${data.empleados}%20empleados)%0A- Sector: ${data.sector || 'N/A'}%0A- Teléfono: ${data.telefono}%0A- Correo: ${data.correo}%0A- Sistemas actuales: ${systext}%0A%0A¡Quedo a la espera de los siguientes pasos!`;
+    const textMsg = `Hola CrGen, mi nombre es ${data.nombre} ${data.apellido}.%0A%0AEstoy solicitando: *${plan}*.%0A%0A*Mis Datos:*%0A- Empresa: ${data.empresa || 'N/A'} (${data.empleados}%20empleados)%0A- Sector: ${data.sector || 'N/A'}%0A- Teléfono: ${data.telefono}%0A- Sistemas actuales: ${systext}%0A%0A¡Quedo a la espera de los siguientes pasos!`;
     
     setTimeout(() => {
       window.open(`https://wa.me/584122984632?text=${textMsg}`, '_blank');
@@ -1344,6 +1351,22 @@ window.addEventListener('scroll', () => {
   if (window.scrollY > 300) dock.classList.add('visible');
   else dock.classList.remove('visible');
 });
+
+// Visit counter (counterapi.dev — public, free, no auth)
+(function(){
+  var el = document.getElementById('visit-count'); if (!el) return;
+  var sessKey = 'crgen_visit_session_v1';
+  var base = 'https://api.counterapi.dev/v1/crgen/site-visits';
+  var url = sessionStorage.getItem(sessKey) ? base + '/' : base + '/up';
+  fetch(url, { cache: 'no-store' })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var n = (d && (d.count != null ? d.count : (d.data && (d.data.up_count != null ? d.data.up_count : d.data.count)))) || 0;
+      el.textContent = Number(n).toLocaleString('es');
+      sessionStorage.setItem(sessKey, '1');
+    })
+    .catch(function(){ el.textContent = '—'; });
+})();
 
 // Nav shrink
 const nav = document.getElementById('nav');
