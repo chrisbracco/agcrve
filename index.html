@@ -1315,6 +1315,10 @@ footer a:hover { color: var(--black); }
   </a>
 </div>
 
+<!-- GSAP (animation engine, free CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
 <script>
 // Lead Form Logic
 function openLeadModal(planName) {
@@ -1429,6 +1433,16 @@ window.addEventListener('scroll', () => {
   if (!emp || !hrs || !seg) return;
   var sal = 400;
   var costEl = document.getElementById('cv-cost');
+  var lastCost = 0;
+  function tweenCost(target){
+    if (window.gsap) {
+      var obj = { v: lastCost };
+      gsap.to(obj, { v: target, duration: 0.55, ease: 'power2.out', onUpdate: function(){ costEl.textContent = '$' + Math.round(obj.v).toLocaleString('es'); } });
+    } else {
+      costEl.textContent = '$' + Math.round(target).toLocaleString('es');
+    }
+    lastCost = target;
+  }
   seg.querySelectorAll('button').forEach(function(b){
     b.addEventListener('click', function(){
       seg.querySelectorAll('button').forEach(function(x){ x.classList.remove('active'); });
@@ -1447,7 +1461,7 @@ window.addEventListener('scroll', () => {
     var costMonth = hoursMonth * hourRate;
     var pct = Math.min(Math.round((h / 40) * 100), 100);
     var roi = costMonth > 0 ? Math.max(1, Math.round(1500 / costMonth)) : 0;
-    costEl.textContent = '$' + Math.round(costMonth).toLocaleString('es');
+    tweenCost(costMonth);
     document.getElementById('cv-hrsmonth').textContent = Math.round(hoursMonth).toLocaleString('es');
     document.getElementById('cv-pct').textContent = pct + '%';
     document.getElementById('cv-roi').textContent = roi >= 12 ? '12+' : roi;
