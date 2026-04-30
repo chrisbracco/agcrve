@@ -4,42 +4,44 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="description" content="CrGen diagnostica y elimina el caos documental que impide a su empresa crecer con control. Arquitectura de datos auditable, resultados medibles." />
+<!-- Security headers (mitigan MIME-sniffing + leak de referrer + clickjacking) -->
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+<meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=(), payment=()">
 <title>CrGen</title>
 <link rel="icon" href="assets/Logo.png" type="image/png">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- 3. Tracking HTML Snippets (Meta, GA4, Clarity) -->
-<!-- Meta Pixel Code -->
+<!-- Tracking (Meta Pixel + GA4 + Clarity) — desactivados hasta configurar IDs reales.
+     Para activar: reemplazar los IDs en el bloque de config + descomentar los snippets.
+     Mantener restringidos por dominio (Meta Events Manager, GA4 Property settings). -->
 <script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '[META_PIXEL_ID]');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=[META_PIXEL_ID]&ev=PageView&noscript=1"/></noscript>
-
-<!-- Google Analytics 4 (GA4) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=[GA4_MEASUREMENT_ID]"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', '[GA4_MEASUREMENT_ID]');
-</script>
-
-<!-- Microsoft Clarity (Heatmaps/Sessions) -->
-<script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "[CLARITY_ID]");
+(function(){
+  var IDS = {
+    meta:    '',  // ej: '1234567890' (Meta Pixel ID)
+    ga4:     '',  // ej: 'G-XXXXXXXXXX'
+    clarity: ''   // ej: 'abc123def4'
+  };
+  // Meta Pixel
+  if (IDS.meta) {
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', IDS.meta); fbq('track', 'PageView');
+  }
+  // GA4
+  if (IDS.ga4) {
+    var s = document.createElement('script'); s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(IDS.ga4);
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('js', new Date()); gtag('config', IDS.ga4);
+  }
+  // Microsoft Clarity
+  if (IDS.clarity) {
+    (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script",IDS.clarity);
+  }
+})();
 </script>
 
 <template id="__bundler_thumbnail">
@@ -1744,9 +1746,13 @@ footer a:hover { color: var(--black); }
   </a>
 </div>
 
-<!-- GSAP (animation engine, free CDN) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<!-- GSAP CDN con SRI + crossorigin (previene CDN compromise) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+        integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+        integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
 
 <script>
 // Lead Form Logic
@@ -2071,8 +2077,17 @@ if(priceSection) {
    RADAR OPERATIVO CrGen — Nivel 0 ampliado
    100% client-side. APIs públicas: PageSpeed Insights + Cloudflare DoH.
    No expone datos del usuario. No accede a sistemas internos.
+   © CrGen — Architecture as a Service. Reproducción no autorizada queda
+   trazada vía referrer logs y branding inline.
    =========================================================== */
 (function(){
+  // Domain guard — bloquea ejecución fuera de crgen.online y dev local.
+  // Friction contra copy-and-deploy casual (no es seguridad criptográfica).
+  var _h = (location.hostname || '').toLowerCase();
+  var _allowed = !_h /* file:// local */
+    || _h === 'crgen.online' || _h === 'www.crgen.online'
+    || _h === 'localhost' || /^127\./.test(_h) || /^192\.168\./.test(_h);
+  if (!_allowed) { console.warn('[CrGen Radar] Inactivo fuera del dominio oficial.'); return; }
   var RD = {
     domainEl: document.getElementById('rd-domain'),
     sectorEl: document.getElementById('rd-sector'),
