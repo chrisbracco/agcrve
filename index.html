@@ -386,8 +386,11 @@ p { line-height: 1.65; color: var(--ink); letter-spacing: -0.005em; }
 .chart-frame {
   border-radius: 14px; border: 1px solid var(--rule);
   background: #fafafa; padding: 18px; aspect-ratio: 16/9;
+  position: relative; overflow: hidden;
 }
-.chart-frame svg { display: block; width: 100%; height: 100%; }
+.chart-frame svg { display: block; width: 100%; height: 100%; position: relative; z-index: 1; }
+.particle-layer { z-index: 0; }
+.particle-layer .particle { box-shadow: 0 0 6px currentColor; }
 
 .compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
 .compare-cell { padding: 14px 16px; border-radius: 12px; border: 1px solid var(--rule); }
@@ -624,6 +627,269 @@ footer a:hover { color: var(--black); }
   box-shadow: 0 6px 24px rgba(37,211,102,0.45), inset 0 1.5px 0 rgba(255,255,255,0.22);
 }
 @media (max-width: 480px) { #float-dock { bottom: 20px; right: 16px; } }
+
+/* === MOBILE PERFORMANCE OVERRIDES (Redmi-class GPUs) === */
+@media (max-width: 900px) {
+  /* backdrop-filter es el peor enemigo del scroll en Android mid-range */
+  .crystal-1, .crystal-2, .crystal-3,
+  .audit-overlay, .visit-counter {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .crystal-1 { background: #ffffff; }
+  .crystal-2 { background: rgba(255,255,255,0.96); }
+  .crystal-3 { background: #ffffff; }
+  /* Ambient blobs: gigantes + blur(160px) = GPU killer. Off en móvil. */
+  #ambient { display: none; }
+  /* Marquee: reduce duración no, pero quita filter+transition por logo */
+  .marquee-track img, .marquee-track svg { transition: none; }
+  /* Bordes finos suficientes; sombras pesadas reducidas */
+  .pillar, .plan, .method-card, .data-card, .calc-app {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+  }
+}
+
+/* Respeto a usuarios con motion reduction activado */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .marquee-track { animation: none !important; }
+}
+
+/* content-visibility: navegador salta render de secciones off-screen */
+#senales, #pilares, #metodo, #calc, #radar, #planes, #lead {
+  content-visibility: auto;
+  contain-intrinsic-size: 800px;
+}
+
+/* === RADAR OPERATIVO (Nivel 0 ampliado) === */
+#radar { padding-top: 0; }
+.radar-app {
+  border-radius: 24px;
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.radar-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 14px;
+  align-items: end;
+}
+.radar-form > div { display: flex; flex-direction: column; gap: 6px; }
+.radar-form label {
+  font-size: 0.7rem; font-weight: 700; color: var(--gray);
+  letter-spacing: 0.05em; text-transform: uppercase;
+}
+.radar-form input,
+.radar-form select {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--rule);
+  background: rgba(255,255,255,0.85);
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--black);
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.radar-form input:focus,
+.radar-form select:focus {
+  border-color: var(--black);
+  box-shadow: 0 0 0 3px rgba(29,29,31,0.08);
+}
+#rd-go {
+  padding: 14px 28px;
+  border-radius: 12px;
+  background: var(--black);
+  color: #fff;
+  border: none;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.18s, box-shadow 0.18s, opacity 0.18s;
+}
+#rd-go:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+#rd-go:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.radar-disclaimer {
+  font-size: 0.78rem;
+  color: var(--gray-lt);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+.radar-scan {
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.scan-bar {
+  height: 4px; width: 100%;
+  background: rgba(0,0,0,0.06);
+  border-radius: 999px; overflow: hidden;
+  margin-bottom: 16px;
+}
+.scan-bar > span {
+  display: block; height: 100%; width: 0%;
+  background: linear-gradient(90deg, #1d1d1f, #6e6e73);
+  transition: width 0.4s ease;
+}
+.scan-line {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.86rem;
+  color: var(--gray);
+  display: flex; align-items: center; gap: 10px;
+  opacity: 0.4;
+  transition: opacity 0.3s, color 0.3s;
+}
+.scan-line.active { opacity: 1; color: var(--black); }
+.scan-line.done { opacity: 0.7; color: #34C759; }
+.scan-line .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gray-xlt);
+  flex-shrink: 0;
+}
+.scan-line.active .dot { background: var(--black); animation: scanPulse 1s ease-in-out infinite; }
+.scan-line.done .dot { background: #34C759; }
+@keyframes scanPulse {
+  0%,100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.5; }
+}
+.radar-result {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+.rd-score-card {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 24px;
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  background: #fff;
+}
+.rd-score-num {
+  font-size: 4.2rem; font-weight: 800; letter-spacing: -0.06em;
+  color: var(--black); line-height: 1;
+  display: flex; align-items: baseline; gap: 4px;
+}
+.rd-score-num small { font-size: 1.1rem; color: var(--gray-lt); font-weight: 600; }
+.rd-score-label {
+  font-size: 0.72rem; color: var(--gray); font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-top: 6px; text-align: center;
+}
+.rd-score-tag {
+  display: inline-block; margin-top: 14px;
+  padding: 6px 14px; border-radius: 999px;
+  font-size: 0.75rem; font-weight: 800; letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.rd-score-tag.bad  { background: rgba(196,69,54,0.1); color: #c44536; }
+.rd-score-tag.mid  { background: rgba(255,159,10,0.12); color: #d97a00; }
+.rd-score-tag.good { background: rgba(52,199,89,0.12); color: #1f8a3a; }
+.rd-dims { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.rd-dim {
+  padding: 14px 16px;
+  background: rgba(0,0,0,0.025);
+  border-radius: 12px;
+}
+.rd-dim-name {
+  font-size: 0.7rem; font-weight: 700; color: var(--gray);
+  letter-spacing: 0.05em; text-transform: uppercase;
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 6px;
+}
+.rd-dim-name b { font-size: 1.1rem; color: var(--black); letter-spacing: -0.02em; }
+.rd-dim-bar {
+  height: 6px; background: rgba(0,0,0,0.06); border-radius: 999px; overflow: hidden;
+}
+.rd-dim-bar > span {
+  display: block; height: 100%;
+  background: var(--black);
+  border-radius: 999px;
+  transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
+}
+.rd-findings {
+  grid-column: 1 / -1;
+  padding: 24px 28px;
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+}
+.rd-findings h4 {
+  font-size: 0.78rem; font-weight: 700; color: var(--gray);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.rd-findings h4 b { color: var(--accent-warn); }
+#rd-findings-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+#rd-findings-list li {
+  padding: 14px 16px 14px 44px;
+  background: rgba(196,69,54,0.04);
+  border-left: 3px solid var(--accent-warn);
+  border-radius: 8px;
+  font-size: 0.94rem; color: var(--black); line-height: 1.5;
+  position: relative;
+}
+#rd-findings-list li::before {
+  content: "!"; position: absolute; left: 14px; top: 12px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent-warn); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 0.75rem;
+}
+.rd-locked {
+  margin-top: 16px;
+  padding: 14px 16px 14px 44px;
+  background: rgba(0,0,0,0.03);
+  border-left: 3px solid var(--gray-xlt);
+  border-radius: 8px;
+  font-size: 0.94rem; color: var(--gray); line-height: 1.5;
+  position: relative;
+}
+.rd-locked::before {
+  content: "\1F512"; position: absolute; left: 12px; top: 12px;
+  font-size: 1rem;
+}
+#rd-cta {
+  grid-column: 1 / -1;
+  width: 100%;
+  padding: 18px 28px;
+  background: var(--black);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+#rd-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,0.2); }
+.rd-error {
+  padding: 14px 18px;
+  background: rgba(196,69,54,0.08);
+  border-radius: 12px;
+  color: var(--accent-warn);
+  font-size: 0.9rem;
+  text-align: center;
+}
+@media (max-width: 768px) {
+  .radar-form { grid-template-columns: 1fr; }
+  .radar-result { grid-template-columns: 1fr; gap: 20px; }
+  .rd-dims { grid-template-columns: 1fr; }
+  .rd-score-card { padding: 20px; }
+  .rd-score-num { font-size: 3.2rem; }
+}
 </style>
 </head>
 <body>
@@ -1117,10 +1383,88 @@ footer a:hover { color: var(--black); }
         <div><span id="cv-hrsmonth">0</span><small>horas/mes</small></div>
         <div><span id="cv-pct">0%</span><small>tiempo equipo</small></div>
         <div><span id="cv-roi">—</span><small>meses ROI Nivel II</small></div>
+        <div><span id="cv-annual">$0</span><small>costo anual proyectado</small></div>
+        <div><span id="cv-fte">0</span><small>FTE bloqueados</small></div>
+        <div><span id="cv-days">0</span><small>días/mes en reportes</small></div>
       </div>
       <button onclick="openLeadModal('CALCULADORA · Diagnóstico Gratis')" class="calc-cta" type="button">Quiero recuperar ese dinero →</button>
       <p class="calc-disclaimer">Estimación referencial. El diagnóstico real cuantifica además flujos cruzados, duplicidades y riesgos no visibles en hoja de cálculo.</p>
     </div>
+  </div>
+</section>
+
+<!-- RADAR OPERATIVO · Nivel 0 ampliado -->
+<section id="radar" class="section-wrap">
+  <div class="section-header">
+    <p class="eyebrow">Radar Operativo CrGen · Gratis · Sin registro</p>
+    <h2>Su empresa expuesta sin saberlo.<br>Lo descubrimos en 30 segundos.</h2>
+    <p class="lead">Ingrese el dominio de su empresa. Auditamos en vivo señales públicas y le devolvemos su <b>Score de Madurez Operativa Digital</b> en 5 dimensiones — más 3 hallazgos críticos accionables.</p>
+  </div>
+
+  <div class="radar-app crystal-2">
+    <!-- Stage 1: form -->
+    <div class="radar-form" id="radar-form">
+      <div>
+        <label for="rd-domain">Dominio de su empresa</label>
+        <input type="text" id="rd-domain" placeholder="suempresa.com" autocomplete="off" inputmode="url" maxlength="80" />
+      </div>
+      <div>
+        <label for="rd-sector">Sector</label>
+        <select id="rd-sector">
+          <option value="">Seleccione...</option>
+          <option value="retail">Retail / Comercio</option>
+          <option value="manufactura">Manufactura / Industrial</option>
+          <option value="servicios">Servicios profesionales</option>
+          <option value="salud">Salud</option>
+          <option value="logistica">Logística / Distribución</option>
+          <option value="finanzas">Finanzas / Contabilidad</option>
+          <option value="construccion">Construcción</option>
+          <option value="educacion">Educación</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div>
+        <label for="rd-size">Tamaño</label>
+        <select id="rd-size">
+          <option value="">Seleccione...</option>
+          <option value="1-10">1 a 10 empleados</option>
+          <option value="11-50">11 a 50 empleados</option>
+          <option value="51-200">51 a 200 empleados</option>
+          <option value="+200">Más de 200</option>
+        </select>
+      </div>
+      <button id="rd-go" type="button">Iniciar Radar →</button>
+    </div>
+
+    <p class="radar-disclaimer">Análisis 100% basado en señales públicas. No accedemos a sistemas internos. Resultado anónimo en su dispositivo.</p>
+
+    <!-- Stage 2: scanning -->
+    <div class="radar-scan" id="radar-scan" hidden>
+      <div class="scan-bar"><span id="scan-bar-fill"></span></div>
+      <div class="scan-line" data-step="dns"><span class="dot"></span><span>Resolviendo infraestructura DNS…</span></div>
+      <div class="scan-line" data-step="web"><span class="dot"></span><span>Auditando arquitectura web (mobile + desktop)…</span></div>
+      <div class="scan-line" data-step="email"><span class="dot"></span><span>Verificando huella SPF / DMARC / MX…</span></div>
+      <div class="scan-line" data-step="visibility"><span class="dot"></span><span>Detectando hallazgos por sector…</span></div>
+      <div class="scan-line" data-step="score"><span class="dot"></span><span>Calculando Madurez Operativa Digital…</span></div>
+    </div>
+
+    <!-- Stage 3: results -->
+    <div class="radar-result" id="radar-result" hidden>
+      <div class="rd-score-card">
+        <div class="rd-score-num"><span id="rd-score-val">0</span><small>/100</small></div>
+        <div class="rd-score-label">Madurez Operativa Digital</div>
+        <span class="rd-score-tag" id="rd-score-tag">—</span>
+      </div>
+      <div class="rd-dims" id="rd-dims"></div>
+      <div class="rd-findings">
+        <h4>3 hallazgos visibles · <b id="rd-hidden">9</b> bloqueados</h4>
+        <ul id="rd-findings-list"></ul>
+        <div class="rd-locked">Hallazgos restantes (incluye fugas de procesos, dependencia de empleados clave, riesgos de compliance) sólo se entregan en el <b>Diagnóstico Profundo Nivel I — $200 USD</b>.</div>
+      </div>
+      <button id="rd-cta" type="button">Desbloquear los hallazgos restantes — Solicitar Nivel I →</button>
+    </div>
+
+    <div class="rd-error" id="rd-error" hidden></div>
   </div>
 </section>
 
@@ -1147,12 +1491,13 @@ footer a:hover { color: var(--black); }
         </div>
       </div>
       <ul class="plan-list" style="flex-grow: 1;">
-        <li><b>Calculadora interactiva</b> de costo de desorden (arriba ↑)</li>
-        <li>Diagnóstico preliminar de datos</li>
-        <li>Identificación de bloqueos de flujo</li>
+        <li><b>Calculadora interactiva</b> de costo del desorden</li>
+        <li><b>Radar Operativo CrGen</b> · Score 0–100 + 3 hallazgos</li>
+        <li>Auditoría pública de exposición digital</li>
+        <li>Identificación preliminar de bloqueos de flujo</li>
       </ul>
-      <div class="plan-hours" style="margin: 16px 0 12px;"><span class="mono">Sesión estratégica en vivo</span></div>
-      <button onclick="document.getElementById('calc').scrollIntoView({behavior:'smooth', block:'start'});" class="btn btn-ghost plan-cta" style="width: 100%; justify-content: center;">Probar la calculadora ↑</button>
+      <div class="plan-hours" style="margin: 16px 0 12px;"><span class="mono">Resultado en 30 segundos</span></div>
+      <button onclick="document.getElementById('radar').scrollIntoView({behavior:'smooth', block:'start'});" class="btn btn-ghost plan-cta" style="width: 100%; justify-content: center;">Activar Radar gratis ↑</button>
     </div>
 
     <!-- FICHA 2: NIVEL I -->
@@ -1418,11 +1763,106 @@ symptoms.forEach(s => {
   s.addEventListener('click', () => { s.classList.toggle('checked'); updateCount(); });
 });
 
-// Floating dock
+// Floating dock + Nav shrink unificados con rAF throttle (perf móvil)
 const dock = document.getElementById('float-dock');
+const navEl = document.getElementById('nav');
+let _scrollTick = false;
+function _onScrollFrame() {
+  const y = window.scrollY;
+  if (dock) dock.classList.toggle('visible', y > 300);
+  if (navEl) {
+    const s = y > 60;
+    navEl.style.maxWidth = s ? '800px' : '1000px';
+    navEl.style.boxShadow = s
+      ? '0 8px 32px rgba(0,0,0,0.08), inset 0 1.5px 0 rgba(255,255,255,1)'
+      : 'inset 0 1.5px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06)';
+  }
+  _scrollTick = false;
+}
 window.addEventListener('scroll', () => {
-  if (window.scrollY > 300) dock.classList.add('visible');
-  else dock.classList.remove('visible');
+  if (!_scrollTick) { requestAnimationFrame(_onScrollFrame); _scrollTick = true; }
+}, { passive: true });
+
+// Animaciones de los 4 gráficos (data-card) on-scroll con GSAP
+// En móvil/low-end → bail (perf) y prefers-reduced-motion → bail
+window.addEventListener('load', function(){
+  if (!(window.gsap && window.ScrollTrigger)) return;
+  var _reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var _isNarrow = window.innerWidth < 900;
+  if (_reduceMotion || _isNarrow) return;
+  gsap.registerPlugin(ScrollTrigger);
+  document.querySelectorAll('.data-grid .data-card').forEach(function(card){
+    var paths = card.querySelectorAll('svg path[stroke]');
+    var circles = card.querySelectorAll('svg circle');
+    var rects = card.querySelectorAll('svg rect');
+    var nums = card.querySelectorAll('.compare-cell b');
+    var tl = gsap.timeline({ scrollTrigger: { trigger: card, start: 'top 82%', once: true } });
+    paths.forEach(function(p){
+      try { var len = p.getTotalLength(); gsap.set(p, { strokeDasharray: len, strokeDashoffset: len }); tl.to(p, { strokeDashoffset: 0, duration: 1.3, ease: 'power2.out' }, 0); } catch(e){}
+    });
+    if (circles.length) tl.from(circles, { scale: 0, transformOrigin: '50% 50%', duration: 0.45, stagger: 0.045, ease: 'back.out(2)' }, 0.25);
+    rects.forEach(function(r){
+      var y0 = parseFloat(r.getAttribute('y')), h0 = parseFloat(r.getAttribute('height'));
+      if (!isNaN(y0) && !isNaN(h0)) { gsap.set(r, { attr: { y: y0 + h0, height: 0 } }); tl.to(r, { attr: { y: y0, height: h0 }, duration: 0.95, ease: 'power3.out' }, 0); }
+    });
+    nums.forEach(function(b){
+      var orig = b.textContent.trim(); var m = orig.match(/^([\d.,]+)(.*)$/);
+      if (m) { var n = parseFloat(m[1].replace(',', '.')); var suf = m[2]; var o = { v: 0 }; tl.to(o, { v: n, duration: 1.1, ease: 'power2.out', onUpdate: function(){ b.textContent = Math.round(o.v) + suf; } }, 0); }
+    });
+
+    // === Partículas DOM sobre el gráfico (efecto data-flow) ===
+    // Inspirado en GSAP particle DOM techniques. Desktop only (ya bailamos arriba).
+    var frame = card.querySelector('.chart-frame');
+    if (frame && !frame.querySelector('.particle-layer')) {
+      var layer = document.createElement('div');
+      layer.className = 'particle-layer';
+      layer.style.cssText = 'position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:inherit;';
+      var pos = window.getComputedStyle(frame).position;
+      if (pos === 'static') frame.style.position = 'relative';
+      frame.appendChild(layer);
+
+      var PARTICLE_COUNT = 10;
+      var particles = [];
+      for (var i = 0; i < PARTICLE_COUNT; i++) {
+        var d = document.createElement('span');
+        d.className = 'particle';
+        d.style.cssText = 'position:absolute;width:4px;height:4px;border-radius:50%;background:#1d1d1f;opacity:0;will-change:transform,opacity;';
+        layer.appendChild(d);
+        particles.push(d);
+      }
+
+      function animateParticle(p) {
+        var w = layer.clientWidth || 320;
+        var h = layer.clientHeight || 200;
+        var startX = Math.random() * w;
+        var startY = h + 8;
+        var endX = startX + (Math.random() - 0.5) * 80;
+        var endY = -8;
+        var dur = 4 + Math.random() * 3;
+        var size = 2 + Math.random() * 3;
+        var hue = Math.random() < 0.5 ? '#1d1d1f' : '#c44536';
+        gsap.set(p, { x: startX, y: startY, width: size, height: size, backgroundColor: hue, opacity: 0 });
+        gsap.to(p, {
+          x: endX, y: endY, opacity: 0.55,
+          duration: dur, ease: 'sine.out',
+          onComplete: function(){
+            gsap.to(p, { opacity: 0, duration: 0.4, onComplete: function(){ animateParticle(p); } });
+          }
+        });
+      }
+
+      // Lazy start: solo animar cuando el card está visible (ScrollTrigger)
+      ScrollTrigger.create({
+        trigger: card,
+        start: 'top 90%',
+        end: 'bottom 10%',
+        onEnter: function(){ particles.forEach(function(p, i){ gsap.delayedCall(i * 0.4, function(){ animateParticle(p); }); }); },
+        onLeave: function(){ particles.forEach(function(p){ gsap.killTweensOf(p); gsap.set(p, { opacity: 0 }); }); },
+        onEnterBack: function(){ particles.forEach(function(p, i){ gsap.delayedCall(i * 0.2, function(){ animateParticle(p); }); }); },
+        onLeaveBack: function(){ particles.forEach(function(p){ gsap.killTweensOf(p); gsap.set(p, { opacity: 0 }); }); }
+      });
+    }
+  });
 });
 
 // Calculadora Deuda Digital
@@ -1465,6 +1905,9 @@ window.addEventListener('scroll', () => {
     document.getElementById('cv-hrsmonth').textContent = Math.round(hoursMonth).toLocaleString('es');
     document.getElementById('cv-pct').textContent = pct + '%';
     document.getElementById('cv-roi').textContent = roi >= 12 ? '12+' : roi;
+    document.getElementById('cv-annual').textContent = '$' + Math.round(costMonth * 12).toLocaleString('es');
+    document.getElementById('cv-fte').textContent = (hoursMonth / 160).toFixed(1);
+    document.getElementById('cv-days').textContent = Math.round(hoursMonth / 8).toLocaleString('es');
     costEl.classList.remove('glow'); void costEl.offsetWidth; costEl.classList.add('glow');
   }
   emp.addEventListener('input', update);
@@ -1488,16 +1931,6 @@ window.addEventListener('scroll', () => {
     .catch(function(){ el.textContent = '—'; });
 })();
 
-// Nav shrink
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-  const s = window.scrollY > 60;
-  nav.style.maxWidth = s ? '800px' : '1000px';
-  nav.style.boxShadow = s
-    ? '0 8px 32px rgba(0,0,0,0.08), inset 0 1.5px 0 rgba(255,255,255,1)'
-    : 'inset 0 1.5px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06)';
-});
-
 // Oferta Timer (48 horas persistente)
 const DURATION = 48 * 60 * 60 * 1000;
 let endTime = localStorage.getItem('crgen_offer_end');
@@ -1513,7 +1946,7 @@ function updateTimer() {
   
   if (diff <= 0) {
     document.querySelectorAll('.countdown-clock').forEach(el => el.textContent = "00:00:00");
-    document.querySelectorAll('.timer-price, .offer-timer, .timer-strike').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.offer-timer, .timer-strike').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.offer-expired').forEach(el => el.style.display = 'block');
     document.getElementById('sticky-timer-banner').style.display = 'none';
     return;
@@ -1549,6 +1982,299 @@ if(priceSection) {
   });
   ioPrice.observe(priceSection);
 }
+
+/* ===========================================================
+   RADAR OPERATIVO CrGen — Nivel 0 ampliado
+   100% client-side. APIs públicas: PageSpeed Insights + Cloudflare DoH.
+   No expone datos del usuario. No accede a sistemas internos.
+   =========================================================== */
+(function(){
+  var RD = {
+    domainEl: document.getElementById('rd-domain'),
+    sectorEl: document.getElementById('rd-sector'),
+    sizeEl: document.getElementById('rd-size'),
+    goBtn: document.getElementById('rd-go'),
+    formBox: document.getElementById('radar-form'),
+    scanBox: document.getElementById('radar-scan'),
+    resultBox: document.getElementById('radar-result'),
+    errorBox: document.getElementById('rd-error'),
+    barFill: document.getElementById('scan-bar-fill'),
+    scoreVal: document.getElementById('rd-score-val'),
+    scoreTag: document.getElementById('rd-score-tag'),
+    dimsBox: document.getElementById('rd-dims'),
+    findingsList: document.getElementById('rd-findings-list'),
+    cta: document.getElementById('rd-cta'),
+    state: { domain: '', sector: '', size: '', score: 0, dims: {}, findings: [] }
+  };
+  if (!RD.goBtn) return;
+
+  // --- Sanitización de input. Bloquea localhost/IPs privadas/protocolos raros.
+  function sanitizeDomain(raw) {
+    if (!raw) return null;
+    var s = String(raw).trim().toLowerCase();
+    s = s.replace(/^https?:\/\//, '').replace(/^www\./, '');
+    s = s.split('/')[0].split('?')[0].split('#')[0];
+    // formato dominio: letras, números, guiones, puntos. mínimo TLD 2 chars.
+    if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(s)) return null;
+    if (s.length < 4 || s.length > 80) return null;
+    // bloquea privados/locales
+    if (/^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.|::1|0\.0\.0\.0)/.test(s)) return null;
+    return s;
+  }
+
+  function showError(msg) {
+    RD.errorBox.textContent = msg;
+    RD.errorBox.hidden = false;
+    setTimeout(function(){ RD.errorBox.hidden = true; }, 6000);
+  }
+
+  // --- Cooldown ligero para no abusar APIs públicas (cosmético).
+  function cooldownOk(domain) {
+    try {
+      var key = 'crgen_radar_' + domain;
+      var last = localStorage.getItem(key);
+      if (last && (Date.now() - parseInt(last, 10)) < 1000 * 60 * 30) return false; // 30 min
+      localStorage.setItem(key, String(Date.now()));
+      return true;
+    } catch(e) { return true; }
+  }
+
+  // --- DNS over HTTPS (Cloudflare). Devuelve array de answers o [] si falla.
+  function dohQuery(domain, type) {
+    var url = 'https://cloudflare-dns.com/dns-query?name=' + encodeURIComponent(domain) + '&type=' + encodeURIComponent(type);
+    return fetch(url, { headers: { 'accept': 'application/dns-json' } })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){ return (j && j.Answer) ? j.Answer : []; })
+      .catch(function(){ return []; });
+  }
+
+  // --- PageSpeed Insights v5 (sin API key — quota compartida; suficiente para uso real).
+  function psiQuery(domain) {
+    var url = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed'
+            + '?url=' + encodeURIComponent('https://' + domain)
+            + '&strategy=mobile&category=performance&category=seo&category=best-practices';
+    return fetch(url)
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .catch(function(){ return null; });
+  }
+
+  // --- Heurística de visibilidad sectorial (cero scrape — solo dominio + sector).
+  function sectorHeuristics(domain, sector) {
+    var hints = [];
+    var tld = domain.split('.').slice(-1)[0];
+    if (tld === 've' || tld === 'co' || tld === 'pe') hints.push('TLD nacional detectado');
+    if (sector === 'finanzas' || sector === 'salud') hints.push('Sector con compliance crítico');
+    return hints;
+  }
+
+  // --- Animación de barra de progreso + step lines.
+  function setStep(stepId, status) {
+    var el = RD.scanBox.querySelector('.scan-line[data-step="' + stepId + '"]');
+    if (!el) return;
+    el.classList.remove('active', 'done');
+    if (status) el.classList.add(status);
+  }
+  function setBar(pct) { RD.barFill.style.width = Math.max(0, Math.min(100, pct)) + '%'; }
+
+  // --- Cálculo de score por dimensión (0-100).
+  function computeDimensions(psi, dns) {
+    var dims = { visibilidad: 50, performance: 50, infraestructura: 50, compliance: 50, conectividad: 50 };
+    var findings = [];
+
+    // Performance ← PSI mobile score
+    if (psi && psi.lighthouseResult && psi.lighthouseResult.categories && psi.lighthouseResult.categories.performance) {
+      var p = Math.round((psi.lighthouseResult.categories.performance.score || 0) * 100);
+      dims.performance = p;
+      if (p < 40) findings.push({ pri: 1, text: 'Sitio carga lento en móvil 4G (score ' + p + '/100). Cada segundo extra = 7% de leads perdidos.' });
+      else if (p < 70) findings.push({ pri: 2, text: 'Performance móvil bajo el rango aceptable (' + p + '/100). Cuello de botella en assets pesados.' });
+    } else {
+      findings.push({ pri: 3, text: 'Performance móvil no medible públicamente — primer indicador de infraestructura opaca.' });
+    }
+
+    // Visibilidad / SEO ← PSI seo + audits clave
+    if (psi && psi.lighthouseResult) {
+      var lr = psi.lighthouseResult;
+      var seoScore = (lr.categories.seo && Math.round(lr.categories.seo.score * 100)) || 50;
+      var bp = (lr.categories['best-practices'] && Math.round(lr.categories['best-practices'].score * 100)) || 50;
+      dims.visibilidad = seoScore;
+      dims.infraestructura = bp;
+      var audits = lr.audits || {};
+      if (audits['meta-description'] && audits['meta-description'].score === 0)
+        findings.push({ pri: 2, text: 'Sin meta-description: Google reduce la visibilidad orgánica de la empresa.' });
+      if (audits['is-on-https'] && audits['is-on-https'].score === 0)
+        findings.push({ pri: 1, text: 'Sitio sin HTTPS válido. Riesgo crítico de exposición y caída de ranking.' });
+      if (audits['viewport'] && audits['viewport'].score === 0)
+        findings.push({ pri: 2, text: 'Sin viewport móvil declarado. Pérdida masiva de engagement en celular.' });
+      if (audits['document-title'] && audits['document-title'].score === 0)
+        findings.push({ pri: 3, text: 'Página principal sin título estructurado. Pérdida directa de SEO.' });
+    }
+
+    // Compliance email ← SPF/DMARC
+    var hasSPF = (dns.txt || []).some(function(r){ return /v=spf1/i.test(r.data || ''); });
+    var hasDMARC = (dns.dmarc || []).some(function(r){ return /v=DMARC1/i.test(r.data || ''); });
+    var compScore = 30 + (hasSPF ? 30 : 0) + (hasDMARC ? 40 : 0);
+    dims.compliance = compScore;
+    if (!hasSPF) findings.push({ pri: 1, text: 'Sin registro SPF: cualquiera puede enviar correos suplantando su dominio corporativo.' });
+    if (!hasDMARC) findings.push({ pri: 1, text: 'Sin política DMARC: emails de la empresa son falsificables sin alerta.' });
+
+    // Conectividad ← MX presence
+    var hasMX = (dns.mx || []).length > 0;
+    dims.conectividad = hasMX ? 80 : 30;
+    if (!hasMX) findings.push({ pri: 2, text: 'Sin servidor de correo (MX) en su dominio principal — depende de servicios externos no auditables.' });
+
+    return { dims: dims, findings: findings };
+  }
+
+  function aggregateScore(dims) {
+    var keys = Object.keys(dims);
+    var sum = keys.reduce(function(a, k){ return a + dims[k]; }, 0);
+    return Math.round(sum / keys.length);
+  }
+
+  // --- Animación count-up del score (GSAP si está, fallback simple).
+  function countUp(el, to, duration) {
+    if (window.gsap) {
+      var o = { v: 0 };
+      gsap.to(o, { v: to, duration: duration || 1.5, ease: 'power2.out',
+        onUpdate: function(){ el.textContent = Math.round(o.v); } });
+    } else {
+      el.textContent = to;
+    }
+  }
+
+  // --- Renderizar resultado.
+  function renderResult(data) {
+    RD.scanBox.hidden = true;
+    RD.resultBox.hidden = false;
+    if (window.gsap) gsap.from(RD.resultBox, { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out' });
+
+    countUp(RD.scoreVal, data.score, 1.4);
+    var tag = RD.scoreTag;
+    tag.classList.remove('bad','mid','good');
+    if (data.score < 50) { tag.textContent = 'Riesgo Alto'; tag.classList.add('bad'); }
+    else if (data.score < 75) { tag.textContent = 'Mejorable'; tag.classList.add('mid'); }
+    else { tag.textContent = 'Sólido'; tag.classList.add('good'); }
+
+    var labels = {
+      visibilidad: 'Visibilidad',
+      performance: 'Performance',
+      infraestructura: 'Infraestructura',
+      compliance: 'Compliance',
+      conectividad: 'Conectividad'
+    };
+    RD.dimsBox.innerHTML = '';
+    Object.keys(data.dims).forEach(function(k){
+      var v = Math.round(data.dims[k]);
+      var dim = document.createElement('div');
+      dim.className = 'rd-dim';
+      var name = document.createElement('div');
+      name.className = 'rd-dim-name';
+      var s = document.createElement('span'); s.textContent = labels[k] || k;
+      var b = document.createElement('b'); b.textContent = v + '/100';
+      name.appendChild(s); name.appendChild(b);
+      var bar = document.createElement('div'); bar.className = 'rd-dim-bar';
+      var fill = document.createElement('span');
+      bar.appendChild(fill);
+      dim.appendChild(name); dim.appendChild(bar);
+      RD.dimsBox.appendChild(dim);
+      requestAnimationFrame(function(){ fill.style.width = v + '%'; });
+    });
+
+    // Top 3 hallazgos por prioridad
+    data.findings.sort(function(a, b){ return a.pri - b.pri; });
+    var top = data.findings.slice(0, 3);
+    if (top.length === 0) {
+      top = [{ text: 'Su dominio expone fingerprint mínimo — el verdadero riesgo está en sus procesos internos, no en lo público.' }];
+    }
+    RD.findingsList.innerHTML = '';
+    top.forEach(function(f){
+      var li = document.createElement('li');
+      li.textContent = f.text;
+      RD.findingsList.appendChild(li);
+    });
+  }
+
+  // --- Lanzar el escaneo (orquesta los stages).
+  function runRadar() {
+    var domainRaw = RD.domainEl.value;
+    var sector = RD.sectorEl.value;
+    var size = RD.sizeEl.value;
+    var domain = sanitizeDomain(domainRaw);
+    if (!domain) return showError('Ingrese un dominio válido (ej: suempresa.com).');
+    if (!sector) return showError('Seleccione su sector.');
+    if (!size) return showError('Seleccione el tamaño de su empresa.');
+    if (!cooldownOk(domain)) return showError('Ya analizamos este dominio recientemente. Reintente en 30 minutos.');
+
+    RD.state.domain = domain;
+    RD.state.sector = sector;
+    RD.state.size = size;
+    RD.errorBox.hidden = true;
+    RD.formBox.style.display = 'none';
+    RD.scanBox.hidden = false;
+    RD.goBtn.disabled = true;
+    setBar(8);
+
+    // Tracking
+    if (typeof fbq === 'function') fbq('track', 'InitiateCheckout', { content_name: 'Radar', content_category: sector });
+    if (typeof gtag === 'function') gtag('event', 'radar_start', { sector: sector, size: size });
+
+    setStep('dns', 'active'); setBar(15);
+
+    var dnsP = Promise.all([
+      dohQuery(domain, 'TXT'),
+      dohQuery('_dmarc.' + domain, 'TXT'),
+      dohQuery(domain, 'MX')
+    ]).then(function(results){
+      setStep('dns', 'done'); setBar(35);
+      return { txt: results[0], dmarc: results[1], mx: results[2] };
+    });
+
+    setTimeout(function(){ setStep('web', 'active'); setBar(40); }, 600);
+    var psiP = psiQuery(domain).then(function(p){
+      setStep('web', 'done'); setBar(70);
+      return p;
+    });
+
+    Promise.all([dnsP, psiP]).then(function(arr){
+      var dns = arr[0], psi = arr[1];
+      setStep('email', 'done'); setBar(80);
+      setStep('visibility', 'done'); setBar(90);
+      var calc = computeDimensions(psi, dns);
+      RD.state.dims = calc.dims;
+      RD.state.findings = calc.findings;
+      RD.state.score = aggregateScore(calc.dims);
+      RD.state.totalFindings = calc.findings.length + 9; // +9 hallazgos bloqueados (Nivel I)
+      document.getElementById('rd-hidden').textContent = Math.max(9, RD.state.totalFindings - 3);
+      setStep('score', 'done'); setBar(100);
+
+      if (typeof fbq === 'function') fbq('track', 'Lead', { content_name: 'Radar', value: RD.state.score });
+      if (typeof gtag === 'function') gtag('event', 'radar_complete', { score: RD.state.score });
+
+      setTimeout(function(){ renderResult(RD.state); }, 500);
+    }).catch(function(){
+      showError('No pudimos completar el análisis. Reintente o contáctenos por WhatsApp.');
+      RD.scanBox.hidden = true;
+      RD.formBox.style.display = '';
+      RD.goBtn.disabled = false;
+    });
+  }
+
+  // --- CTA: abre lead modal con prefill (no enviamos datos a servidor — todo va por WhatsApp).
+  RD.cta.addEventListener('click', function(){
+    var s = RD.state;
+    var summary = 'RADAR · ' + s.domain + ' · Score ' + s.score + '/100 · Sector ' + s.sector + ' · ' + s.size;
+    if (typeof openLeadModal === 'function') openLeadModal(summary);
+    // pre-fill empresa si está vacío
+    var emp = document.getElementById('lm-empresa');
+    if (emp && !emp.value) emp.value = s.domain;
+    var emple = document.getElementById('lm-empleados');
+    if (emple && !emple.value) emple.value = s.size;
+    if (typeof fbq === 'function') fbq('track', 'Lead', { content_name: 'Radar→NivelI' });
+  });
+
+  RD.goBtn.addEventListener('click', runRadar);
+  RD.domainEl.addEventListener('keydown', function(e){ if (e.key === 'Enter') runRadar(); });
+})();
 </script>
 </body>
 </html>

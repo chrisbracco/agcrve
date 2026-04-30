@@ -4,3 +4,17 @@
 .venv/
 skills-lock.json
 
+# Privado · NUNCA publicar
+engine/
+clients/
+briefs/
+.env
+.env.*
+*.pem
+*.key
+secrets.json
+credentials.json
+__pycache__/
+*.pyc
+reports/
+
