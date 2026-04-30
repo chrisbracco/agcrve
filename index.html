@@ -883,6 +883,58 @@ footer a:hover { color: var(--black); }
   font-size: 0.9rem;
   text-align: center;
 }
+/* Bloque "Qué analiza el Radar" — culturalmente claro para LATAM 20-55 */
+.radar-explain {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 8px;
+  padding: 22px 24px;
+  border-top: 1px solid var(--rule);
+}
+.radar-explain h5 {
+  grid-column: 1 / -1;
+  font-size: 0.74rem; font-weight: 700; color: var(--gray);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.rx-item { display: flex; gap: 12px; align-items: flex-start; }
+.rx-icon {
+  flex-shrink: 0; width: 36px; height: 36px;
+  border-radius: 10px; background: rgba(0,0,0,0.05);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+}
+.rx-text { font-size: 0.86rem; line-height: 1.5; color: var(--gray); }
+.rx-text b { display: block; color: var(--black); margin-bottom: 2px; font-size: 0.92rem; font-weight: 800; letter-spacing: -0.01em; }
+
+/* Bloque "Qué vendemos" — claridad debajo del hero */
+.what-we-sell {
+  margin: 36px auto 0;
+  max-width: 880px;
+  padding: 28px 32px;
+  border-radius: 18px;
+  background: rgba(0,0,0,0.025);
+  border: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 22px;
+  align-items: center;
+}
+.what-we-sell .wws-mark {
+  width: 56px; height: 56px;
+  border-radius: 14px; background: var(--black); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; font-weight: 800; letter-spacing: -0.04em;
+  flex-shrink: 0;
+}
+.what-we-sell p { color: var(--gray); margin: 0; line-height: 1.55; }
+.what-we-sell p b { color: var(--black); font-weight: 800; }
+@media (max-width: 600px) {
+  .what-we-sell { grid-template-columns: 1fr; text-align: center; gap: 14px; padding: 22px; }
+  .what-we-sell .wws-mark { margin: 0 auto; }
+  .radar-explain { padding: 18px; }
+}
 @media (max-width: 768px) {
   .radar-form { grid-template-columns: 1fr; }
   .radar-result { grid-template-columns: 1fr; gap: 20px; }
@@ -921,7 +973,7 @@ footer a:hover { color: var(--black); }
     </h1>
 
     <p class="hero-sub">
-      Automatizamos sus procesos sin cambiar los sistemas que ya usa. Organizamos el desorden de herramientas de su empresa y transformamos esos silos fragmentados en un solo flujo corporativo rentable, donde el negocio opera bajo una sola directiva.
+      Conectamos los sistemas que su empresa ya usa, eliminamos el caos de planillas y reportes manuales, y dejamos su operación corriendo bajo un solo flujo auditable. Sin migrar nada. Sin licencias forzadas.
     </p>
 
     <div class="cta-row">
@@ -929,6 +981,13 @@ footer a:hover { color: var(--black); }
       <a href="#pilares" class="btn btn-ghost">Ver Arquitectura</a>
     </div>
 
+    <!-- Qué vendemos — claridad LATAM 20-55 -->
+    <div class="what-we-sell">
+      <div class="wws-mark">Cr</div>
+      <p>
+        <b>Vendemos arquitectura digital.</b> No software, no licencias. Limpiamos el desorden entre sus sistemas (SAP, Odoo, Excel, SAINT, lo que sea), conectamos lo que está aislado y automatizamos lo repetitivo. Su empresa pasa de operar con planillas y emails cruzados a un único flujo donde la información se ve clara, en tiempo real y sin depender de una sola persona.
+      </p>
+    </div>
 
   </div>
 </section>
@@ -1396,9 +1455,9 @@ footer a:hover { color: var(--black); }
 <!-- RADAR OPERATIVO · Nivel 0 ampliado -->
 <section id="radar" class="section-wrap">
   <div class="section-header">
-    <p class="eyebrow">Radar Operativo CrGen · Gratis · Sin registro</p>
-    <h2>Su empresa expuesta sin saberlo.<br>Lo descubrimos en 30 segundos.</h2>
-    <p class="lead">Ingrese el dominio de su empresa. Auditamos en vivo señales públicas y le devolvemos su <b>Score de Madurez Operativa Digital</b> en 5 dimensiones — más 3 hallazgos críticos accionables.</p>
+    <p class="eyebrow">Radar Operativo CrGen · Gratis · Sin registro · Sin instalar nada</p>
+    <h2>Su empresa expuesta sin saberlo.<br>Lo vemos en 30 segundos.</h2>
+    <p class="lead">Escriba el dominio de su empresa (ej: <i>suempresa.com</i>) y le devolvemos en vivo su <b>Score de Madurez Digital</b> sobre 100 — con 3 problemas concretos que ya están costándole dinero o exponiendo su negocio. Todo desde su navegador, sin enviarnos nada privado.</p>
   </div>
 
   <div class="radar-app crystal-2">
@@ -1436,7 +1495,32 @@ footer a:hover { color: var(--black); }
       <button id="rd-go" type="button">Iniciar Radar →</button>
     </div>
 
-    <p class="radar-disclaimer">Análisis 100% basado en señales públicas. No accedemos a sistemas internos. Resultado anónimo en su dispositivo.</p>
+    <p class="radar-disclaimer">Análisis basado en señales 100% públicas. No accedemos a sus sistemas internos. El resultado vive sólo en su navegador.</p>
+
+    <!-- Qué analiza el Radar — explicación clara, sin tecnicismos -->
+    <div class="radar-explain">
+      <h5>Qué revisamos en su empresa</h5>
+      <div class="rx-item">
+        <span class="rx-icon">🌐</span>
+        <span class="rx-text"><b>Su web y dominio</b>Si la página carga rápido, si Google la entiende y si los clientes la encuentran cuando buscan.</span>
+      </div>
+      <div class="rx-item">
+        <span class="rx-icon">📱</span>
+        <span class="rx-text"><b>Velocidad real en el celular</b>Medimos qué siente su cliente cuando entra desde un teléfono con datos móviles, no desde un equipo de oficina.</span>
+      </div>
+      <div class="rx-item">
+        <span class="rx-icon">📧</span>
+        <span class="rx-text"><b>Su correo corporativo</b>Verificamos si alguien puede mandar correos haciéndose pasar por su empresa (suplantación) — pasa más de lo que cree.</span>
+      </div>
+      <div class="rx-item">
+        <span class="rx-icon">🔒</span>
+        <span class="rx-text"><b>Compliance y exposición</b>Detectamos brechas de cumplimiento públicas que abren la puerta a multas, fraude o pérdida de confianza.</span>
+      </div>
+      <div class="rx-item">
+        <span class="rx-icon">🧭</span>
+        <span class="rx-text"><b>Conectividad y presencia</b>Cómo está conectada su marca entre dominio, redes sociales y canales de atención al cliente.</span>
+      </div>
+    </div>
 
     <!-- Stage 2: scanning -->
     <div class="radar-scan" id="radar-scan" hidden>
@@ -2048,13 +2132,21 @@ if(priceSection) {
       .catch(function(){ return []; });
   }
 
-  // --- PageSpeed Insights v5 (sin API key — quota compartida; suficiente para uso real).
+  // --- PageSpeed Insights v5.
+  // Para evitar rate-limit (429), generar API key gratis en
+  // https://console.cloud.google.com → habilitar "PageSpeed Insights API" →
+  // restringir por HTTP referrer a "*.crgen.online/*" → pegar abajo.
+  var PSI_API_KEY = ''; // ← pegar key restringida por referrer aquí
   function psiQuery(domain) {
     var url = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed'
             + '?url=' + encodeURIComponent('https://' + domain)
             + '&strategy=mobile&category=performance&category=seo&category=best-practices';
+    if (PSI_API_KEY) url += '&key=' + encodeURIComponent(PSI_API_KEY);
     return fetch(url)
-      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(r){
+        if (r.status === 429) return { _rateLimited: true };
+        return r.ok ? r.json() : null;
+      })
       .catch(function(){ return null; });
   }
 
@@ -2232,7 +2324,8 @@ if(priceSection) {
     setTimeout(function(){ setStep('web', 'active'); setBar(40); }, 600);
     var psiP = psiQuery(domain).then(function(p){
       setStep('web', 'done'); setBar(70);
-      return p;
+      if (p && p._rateLimited) RD.state.psiRateLimited = true;
+      return (p && p._rateLimited) ? null : p;
     });
 
     Promise.all([dnsP, psiP]).then(function(arr){
@@ -2250,9 +2343,14 @@ if(priceSection) {
       if (typeof fbq === 'function') fbq('track', 'Lead', { content_name: 'Radar', value: RD.state.score });
       if (typeof gtag === 'function') gtag('event', 'radar_complete', { score: RD.state.score });
 
-      setTimeout(function(){ renderResult(RD.state); }, 500);
+      setTimeout(function(){
+        renderResult(RD.state);
+        if (RD.state.psiRateLimited) {
+          showError('La auditoría de velocidad móvil está temporalmente saturada (rate-limit). El resto del análisis se completó correctamente. Reintente en unos minutos para obtener el score completo.');
+        }
+      }, 500);
     }).catch(function(){
-      showError('No pudimos completar el análisis. Reintente o contáctenos por WhatsApp.');
+      showError('No pudimos completar el análisis. Reintente en un momento o escríbanos por WhatsApp y lo revisamos manualmente.');
       RD.scanBox.hidden = true;
       RD.formBox.style.display = '';
       RD.goBtn.disabled = false;
